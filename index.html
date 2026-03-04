@@ -240,6 +240,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .mich-card-nav:active{opacity:.7}
 .mich-count{font-size:12px;color:var(--text-light);margin-bottom:8px}
 .mich-list{max-height:400px;overflow-y:auto;padding-right:4px}
+.map-pin-btn{position:absolute;bottom:52px;right:10px;z-index:1000;width:36px;height:36px;border-radius:50%;background:#fff;border:2px solid rgba(0,0,0,.15);box-shadow:0 2px 6px rgba(0,0,0,.2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:background .2s}
+.map-pin-btn.active{background:#fff3e0;border-color:var(--accent)}
+.map-pin-btn:active{background:#e8e8e8}
+.map-crosshair{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:999;pointer-events:none;font-size:28px;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4));transition:opacity .2s}
+.map-confirm-btn{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);z-index:1000;padding:6px 20px;border-radius:20px;border:none;background:var(--accent);color:#fff;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25);transition:opacity .2s}
+.map-confirm-btn:active{opacity:.7}
 </style>
 </head>
 <body>
@@ -603,14 +609,15 @@ function initMichMap(containerId,data){
   if(group.length>1)map.fitBounds(group,{padding:[25,25]});
   else if(group.length===1)map.setView(group[0],15);
   // Show user position on map if available
-  if(_michUserPos){
-    L.marker([_michUserPos.lat,_michUserPos.lng],{icon:L.divIcon({className:'',html:'<div class="leaflet-loc-dot"></div>',iconSize:[14,14],iconAnchor:[7,7]})}).addTo(map).bindPopup('📍 你在這裡');
-  }
-  // Locate button
-  const locBtn=document.createElement('button');
-  locBtn.className='map-locate-btn';locBtn.innerHTML='📍';locBtn.title='顯示我的位置';
-  el.style.position='relative';el.appendChild(locBtn);
+  el.style.position='relative';
   let locMarker=null,locCircle=null;
+  if(_michUserPos){
+    locMarker=L.marker([_michUserPos.lat,_michUserPos.lng],{icon:L.divIcon({className:'',html:'<div class="leaflet-loc-dot"></div>',iconSize:[14,14],iconAnchor:[7,7]})}).addTo(map).bindPopup('📍 你在這裡');
+  }
+  // 🧑 GPS locate button
+  const locBtn=document.createElement('button');
+  locBtn.className='map-locate-btn';locBtn.innerHTML='🧑';locBtn.title='GPS 定位';
+  el.appendChild(locBtn);
   locBtn.addEventListener('click',()=>{
     if(!navigator.geolocation){alert('你的瀏覽器不支援定位');return;}
     locBtn.classList.add('locating');
@@ -618,8 +625,11 @@ function initMichMap(containerId,data){
       locBtn.classList.remove('locating');
       const lat=pos.coords.latitude,lng=pos.coords.longitude,acc=pos.coords.accuracy;
       _michUserPos={lat,lng};
-      if(locMarker){map.removeLayer(locMarker);map.removeLayer(locCircle);}
-      locMarker=L.marker([lat,lng],{icon:L.divIcon({className:'',html:'<div class="leaflet-loc-dot"></div>',iconSize:[14,14],iconAnchor:[7,7]})}).addTo(map).bindPopup('📍 你在這裡');
+      if(locMarker)map.removeLayer(locMarker);
+      if(locCircle)map.removeLayer(locCircle);
+      // Exit pin mode if active
+      if(pinMode){pinBtn.click();}
+      locMarker=L.marker([lat,lng],{icon:L.divIcon({className:'',html:'<div class="leaflet-loc-dot"></div>',iconSize:[14,14],iconAnchor:[7,7]})}).addTo(map).bindPopup('🧑 你在這裡');
       locCircle=L.circle([lat,lng],{radius:acc,color:'#007aff',fillColor:'#007aff',fillOpacity:.1,weight:1}).addTo(map);
       map.setView([lat,lng],15);locMarker.openPopup();
       filterMichelin();
@@ -627,6 +637,42 @@ function initMichMap(containerId,data){
       locBtn.classList.remove('locating');
       alert('定位失敗：'+(err.code===1?'請允許位置存取權限':err.code===2?'無法取得位置':'定位逾時'));
     },{enableHighAccuracy:true,timeout:10000});
+  });
+  // 📌 Pin drop button
+  const pinBtn=document.createElement('button');
+  pinBtn.className='map-pin-btn';pinBtn.innerHTML='📌';pinBtn.title='插 pin 計算距離';
+  el.appendChild(pinBtn);
+  let pinMode=false,crosshair=null,confirmBtn=null,pinMarker=null;
+  pinBtn.addEventListener('click',()=>{
+    pinMode=!pinMode;
+    pinBtn.classList.toggle('active',pinMode);
+    if(pinMode){
+      // Show crosshair at map center
+      crosshair=document.createElement('div');
+      crosshair.className='map-crosshair';crosshair.textContent='📍';
+      el.appendChild(crosshair);
+      // Show confirm button
+      confirmBtn=document.createElement('button');
+      confirmBtn.className='map-confirm-btn';confirmBtn.textContent='✓ 確定位置';
+      el.appendChild(confirmBtn);
+      confirmBtn.addEventListener('click',()=>{
+        const c=map.getCenter();
+        _michUserPos={lat:c.lat,lng:c.lng};
+        // Place pin marker
+        if(pinMarker)map.removeLayer(pinMarker);
+        if(locMarker)map.removeLayer(locMarker);
+        if(locCircle){map.removeLayer(locCircle);locCircle=null;}
+        pinMarker=L.marker([c.lat,c.lng],{icon:L.divIcon({className:'',html:'<div style="font-size:22px">📌</div>',iconSize:[22,22],iconAnchor:[11,22]})}).addTo(map).bindPopup('📌 已設定位置');
+        locMarker=null;
+        // Exit pin mode
+        pinBtn.click();
+        filterMichelin();
+      });
+    } else {
+      // Remove crosshair and confirm
+      if(crosshair){crosshair.remove();crosshair=null;}
+      if(confirmBtn){confirmBtn.remove();confirmBtn=null;}
+    }
   });
   _maps[containerId]=map;
 }
