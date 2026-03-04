@@ -866,7 +866,7 @@ function renderTranslateUI(){
 async function callGemini(text){
   const key=getGeminiKey();
   if(!key)throw new Error('未設定 API Key');
-  const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${key}`;
+  const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
   const body={
     contents:[{parts:[{text:`你是旅遊翻譯助手。將以下中文翻譯成泰文，並提供羅馬拼音（方便發音）。
 請用以下 JSON 格式回覆（不要加 markdown）：
