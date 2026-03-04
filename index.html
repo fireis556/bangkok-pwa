@@ -8,6 +8,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <title>🇹🇭 2026 曼谷自由行</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -204,6 +206,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .tr-reset-btn:active{color:var(--accent)}
 .tr-spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
 @keyframes spin{to{transform:rotate(360deg)}}
+.map-wrap{border-radius:14px;overflow:hidden;border:1.5px solid rgba(200,155,60,.25);box-shadow:var(--shadow);margin-bottom:12px}
+.map-sm{height:180px;width:100%}
+.map-lg{height:350px;width:100%}
+.leaflet-popup-content{font-family:inherit;font-size:13px;line-height:1.5;min-width:140px}
+.leaflet-popup-content b{font-size:14px}
+.map-nav-btn{display:inline-block;margin-top:6px;padding:4px 12px;background:var(--accent);color:#fff;border-radius:8px;text-decoration:none;font-size:12px;font-weight:600}
+.map-nav-btn:active{opacity:.7}
+.map-legend{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;font-size:11px;color:var(--text-light);margin-top:8px}
+.map-legend-item{display:flex;align-items:center;gap:3px}
+.map-legend-dot{width:10px;height:10px;border-radius:50%;border:1.5px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.2)}
 </style>
 </head>
 <body>
@@ -370,6 +382,76 @@ const DAYS = [
     ]
   }
 ];
+
+/* Map places with verified coordinates */
+const PLACES = [
+  // Day 1 - Ratchadamri / Chit Lom
+  {day:1,name:"Prestige Hotel",cat:"hotel",lat:13.7413,lng:100.5390,info:"飯店｜BTS Ratchadamri"},
+  {day:1,name:"Let's Relax CentralWorld",cat:"spa",lat:13.7466,lng:100.5392,info:"按摩 60min ฿800｜2F Dazzle Zone"},
+  {day:1,name:"Gaysorn Amarin",cat:"spot",lat:13.7445,lng:100.5420,info:"商場｜10:00-21:00"},
+  {day:1,name:"Baannok BKK",cat:"food",lat:13.7420,lng:100.5430,info:"米其林泰菜｜需預約"},
+  {day:1,name:"Red Sky Bar",cat:"bar",lat:13.7470,lng:100.5395,info:"55-56F｜Smart casual"},
+  // Day 2 - Chatuchak / Ratchada
+  {day:2,name:"洽圖洽市集",cat:"spot",lat:13.7999,lng:100.5509,info:"週末 09:00-18:00"},
+  {day:2,name:"Or Tor Kor Market",cat:"food",lat:13.8020,lng:100.5535,info:"生鮮市場｜~฿200/人"},
+  {day:2,name:"Let's Relax Ratchada",cat:"spa",lat:13.7641,lng:100.5742,info:"按摩 60min ฿800"},
+  {day:2,name:"JODD FAIRS",cat:"spot",lat:13.7650,lng:100.5730,info:"夜市｜17:00-01:00"},
+  // Day 3 - Lang Suan / Central Embassy / One Bangkok
+  {day:3,name:"Kimpton Maa-Lai",cat:"hotel",lat:13.7438,lng:100.5445,info:"飯店｜Lang Suan"},
+  {day:3,name:"Eathai",cat:"food",lat:13.7440,lng:100.5470,info:"Central Embassy B1｜~฿300/人"},
+  {day:3,name:"Central Embassy",cat:"spot",lat:13.7445,lng:100.5468,info:"商場｜10:00-22:00"},
+  {day:3,name:"Somboon Seafood",cat:"food",lat:13.7442,lng:100.5465,info:"咖哩蟹名店｜~฿800/人"},
+  {day:3,name:"One Bangkok",cat:"spot",lat:13.7235,lng:100.5410,info:"新商場｜水舞秀"},
+  // Day 4 - 古蹟 / 河畔
+  {day:4,name:"大皇宮＋玉佛寺",cat:"spot",lat:13.7500,lng:100.4914,info:"門票 ฿500｜08:30-16:30"},
+  {day:4,name:"臥佛寺",cat:"spot",lat:13.7465,lng:100.4930,info:"門票 ฿300｜按摩 ฿520"},
+  {day:4,name:"鄭王廟",cat:"spot",lat:13.7437,lng:100.4888,info:"門票 ฿200｜渡輪 ฿5"},
+  {day:4,name:"ICONSIAM",cat:"spot",lat:13.7268,lng:100.5100,info:"河畔商場｜10:00-22:00"},
+  {day:4,name:"Asiatique",cat:"spot",lat:13.7052,lng:100.5014,info:"河畔夜市｜11:00-00:00"},
+  // Day 5 - Sukhumvit / Mahanakhon / Chinatown
+  {day:5,name:"Let's Relax Sukhumvit",cat:"spa",lat:13.7380,lng:100.5600,info:"按摩 60min ฿800"},
+  {day:5,name:"Terminal 21",cat:"food",lat:13.7376,lng:100.5604,info:"美食區｜~฿200/人"},
+  {day:5,name:"Mahanakhon SkyWalk",cat:"spot",lat:13.7230,lng:100.5290,info:"觀景台｜฿880-1200"},
+  {day:5,name:"唐人街 Yaowarat",cat:"food",lat:13.7400,lng:100.5090,info:"街區美食｜入夜最熱鬧"},
+  // Day 6 - 機場
+  {day:6,name:"素萬那普機場",cat:"spot",lat:13.6900,lng:100.7501,info:"回程"}
+];
+const MAP_COLORS={food:'#ff9500',spot:'#34c759',spa:'#5ac8fa',hotel:'#af52de',bar:'#c89b3c'};
+
+function createMapIcon(color){
+  return L.divIcon({className:'',html:`<div style="width:22px;height:22px;border-radius:50%;background:${color};border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.35)"></div>`,iconSize:[22,22],iconAnchor:[11,11],popupAnchor:[0,-13]});
+}
+function addMapMarkers(map,places){
+  const group=[];
+  places.forEach(p=>{
+    const color=MAP_COLORS[p.cat]||'#999';
+    const navUrl=`https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`;
+    const popup=`<b>Day${p.day} ${p.name}</b><br><span style="color:#666">${p.info}</span><br><a class="map-nav-btn" href="${navUrl}" target="_blank" rel="noopener">📍 導航</a>`;
+    L.marker([p.lat,p.lng],{icon:createMapIcon(color)}).addTo(map).bindPopup(popup);
+    group.push([p.lat,p.lng]);
+  });
+  if(group.length>1)map.fitBounds(group,{padding:[25,25]});
+  else if(group.length===1)map.setView(group[0],15);
+}
+function mapLegendHtml(){
+  return `<div class="map-legend">
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#ff9500"></div>餐廳</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#34c759"></div>景點</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#5ac8fa"></div>按摩</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#af52de"></div>飯店</div>
+    <div class="map-legend-item"><div class="map-legend-dot" style="background:#c89b3c"></div>酒吧</div>
+  </div>`;
+}
+const _maps={};
+function initMap(containerId,places,size){
+  if(_maps[containerId]){_maps[containerId].invalidateSize();return;}
+  const el=document.getElementById(containerId);
+  if(!el||el.offsetParent===null)return;
+  const map=L.map(containerId,{scrollWheelZoom:true,dragging:true,zoomControl:size==='lg'}).setView([13.745,100.535],12);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM',maxZoom:18}).addTo(map);
+  addMapMarkers(map,places);
+  _maps[containerId]=map;
+}
 
 function mapUrl(q){return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`}
 function getCat(a){
@@ -578,6 +660,7 @@ function render(){
     if(d.hotel)html+=`<div class="hotel">${d.hotel}</div>`;
     d.warns.forEach(w=>html+=`<div class="warn">⚠️ ${w}</div>`);
     html+=`</div>`;
+    html+=`<div class="map-wrap"><div class="map-sm" id="daymap${d.day}"></div></div>${mapLegendHtml()}`;
     html+=`<div class="day-subtabs"><div class="day-subtab active" data-subtab="itinerary">🗓 行程</div><div class="day-subtab" data-subtab="meals">🍽 三餐</div></div>`;
     html+=`<div class="tab-section active" data-section="itinerary">`;
     html+=`<div class="timeline">`;
@@ -619,6 +702,13 @@ function render(){
     const at=document.querySelector('.tab.active');
     if(at)at.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
     window.scrollTo({top:0,behavior:'smooth'});
+    // Init day map after view is visible
+    if(n>0){
+      setTimeout(()=>{
+        const dayPlaces=PLACES.filter(p=>p.day===n);
+        if(dayPlaces.length)initMap('daymap'+n,dayPlaces,'sm');
+      },100);
+    }
   }
   tabs.addEventListener('click',e=>{
     const tab=e.target.closest('.tab');
@@ -626,8 +716,12 @@ function render(){
   });
 
   let sx=0,sy=0;
-  content.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+  content.addEventListener('touchstart',e=>{
+    if(e.target.closest('.map-wrap'))return;
+    sx=e.touches[0].clientX;sy=e.touches[0].clientY;
+  },{passive:true});
   content.addEventListener('touchend',e=>{
+    if(e.target.closest('.map-wrap'))return;
     const dx=e.changedTouches[0].clientX-sx;
     const dy=e.changedTouches[0].clientY-sy;
     if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){
@@ -645,6 +739,8 @@ function render(){
       subtab.classList.add('active');
       const sec=subtab.dataset.subtab;
       dv.querySelectorAll('.tab-section').forEach(s=>s.classList.toggle('active',s.dataset.section===sec));
+      // Init dashboard map when switching to map tab
+      if(sec==='map')setTimeout(()=>initMap('dashmap',PLACES,'lg'),100);
       return;
     }
     if(e.target.closest('a'))return;
@@ -715,6 +811,7 @@ function renderDashboard(){
   html+='<div class="day-subtab" data-subtab="calc">💱 匯率</div>';
   html+='<div class="day-subtab" data-subtab="nospicy">🌶️ 不辣</div>';
   html+='<div class="day-subtab" data-subtab="translate">🔤 翻譯</div>';
+  html+='<div class="day-subtab" data-subtab="map">🗺 地圖</div>';
   html+='</div>';
 
   // Warns
@@ -776,11 +873,36 @@ function renderDashboard(){
   // Translate section
   html+=`<div class="tab-section" data-section="translate"><div class="dash-section" id="tr-container"></div></div>`;
 
+  // Map section
+  let mapHtml='<div class="dash-section"><h3>🗺 全行程地圖</h3>';
+  mapHtml+='<p style="font-size:12px;color:var(--text-light);margin-bottom:10px">點擊標記查看資訊，點「導航」開啟 Google Maps</p>';
+  mapHtml+='<div class="day-filter-bar" style="display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap">';
+  mapHtml+='<button class="map-day-btn active" data-mday="all" style="padding:5px 12px;border-radius:16px;border:1.5px solid var(--accent);background:var(--accent);color:#fff;font-size:12px;font-weight:600;cursor:pointer">全部</button>';
+  for(let i=1;i<=6;i++)mapHtml+=`<button class="map-day-btn" data-mday="${i}" style="padding:5px 12px;border-radius:16px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-size:12px;font-weight:600;cursor:pointer">Day${i}</button>`;
+  mapHtml+='</div>';
+  mapHtml+='<div class="map-wrap"><div class="map-lg" id="dashmap"></div></div>';
+  mapHtml+=mapLegendHtml();
+  mapHtml+='</div>';
+  html+=`<div class="tab-section" data-section="map">${mapHtml}</div>`;
+
   el.innerHTML=html;
   document.getElementById('calc-thb').addEventListener('input',calcFromThb);
   document.getElementById('calc-twd').addEventListener('input',calcFromTwd);
   renderTranslateUI();
   _dashRendered=true;
+
+  // Dashboard map day filter
+  el.querySelectorAll('.map-day-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      el.querySelectorAll('.map-day-btn').forEach(b=>{b.style.background='transparent';b.style.color='var(--accent)';b.classList.remove('active');});
+      btn.style.background='var(--accent)';btn.style.color='#fff';btn.classList.add('active');
+      const mday=btn.dataset.mday;
+      const containerId='dashmap';
+      if(_maps[containerId]){_maps[containerId].remove();delete _maps[containerId];}
+      const places=mday==='all'?PLACES:PLACES.filter(p=>p.day==mday);
+      initMap(containerId,places,'lg');
+    });
+  });
 }
 
 /* Translate */
