@@ -179,6 +179,31 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .nospicy-foods{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
 .nospicy-food{background:rgba(52,199,89,.06);border:1px solid rgba(52,199,89,.12);border-radius:10px;padding:8px 10px;font-size:12px;font-weight:600;color:#1b7a34;text-align:center}
 .footer{text-align:center;padding:20px;font-size:11px;color:var(--text-light)}
+/* Translate */
+.tr-setup{text-align:center;padding:32px 16px}
+.tr-setup p{font-size:13px;color:var(--text-light);margin-bottom:12px;line-height:1.6}
+.tr-key-input{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-size:14px;font-family:'SF Mono',Menlo,'Courier New',monospace;outline:none;background:#fff;transition:border-color .2s;margin-bottom:10px}
+.tr-key-input:focus{border-color:var(--accent)}
+.tr-save-btn,.tr-send-btn,.tr-copy-btn,.tr-reset-btn{border:none;border-radius:10px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s}
+.tr-save-btn{background:var(--accent);color:#fff;width:100%}
+.tr-save-btn:active{opacity:.7}
+.tr-area{padding:0}
+.tr-input-wrap{position:relative;margin-bottom:10px}
+.tr-input{width:100%;min-height:80px;border:1.5px solid var(--border);border-radius:14px;padding:12px 14px;font-size:15px;font-family:inherit;outline:none;resize:none;background:#fff;transition:border-color .2s;line-height:1.5}
+.tr-input:focus{border-color:var(--accent)}
+.tr-send-btn{background:var(--accent);color:#fff;width:100%;margin-bottom:8px}
+.tr-send-btn:active{opacity:.7}
+.tr-send-btn:disabled{background:var(--border);color:var(--text-light);cursor:default}
+.tr-result-box{background:linear-gradient(135deg,rgba(200,155,60,.06),rgba(200,155,60,.14));border:1px solid rgba(200,155,60,.2);border-radius:14px;padding:16px;min-height:60px;margin-bottom:8px}
+.tr-result-thai{font-size:22px;font-weight:700;color:var(--text);line-height:1.5;word-break:break-word}
+.tr-result-roman{font-size:13px;color:var(--text-light);margin-top:6px;line-height:1.5}
+.tr-result-placeholder{font-size:14px;color:var(--text-light);text-align:center;padding:12px 0}
+.tr-copy-btn{background:rgba(200,155,60,.12);color:var(--accent);width:100%;margin-bottom:6px}
+.tr-copy-btn:active{background:rgba(200,155,60,.25)}
+.tr-reset-btn{background:none;color:var(--text-light);font-size:12px;width:100%;margin-top:8px;padding:6px}
+.tr-reset-btn:active{color:var(--accent)}
+.tr-spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -691,6 +716,7 @@ function renderDashboard(){
   html+='<div class="day-subtab" data-subtab="budget">💰 預算</div>';
   html+='<div class="day-subtab" data-subtab="calc">💱 匯率</div>';
   html+='<div class="day-subtab" data-subtab="nospicy">🌶️ 不辣</div>';
+  html+='<div class="day-subtab" data-subtab="translate">🔤 翻譯</div>';
   html+='</div>';
 
   // Warns
@@ -749,10 +775,121 @@ function renderDashboard(){
   nospicy+='</div></div>';
   html+=`<div class="tab-section" data-section="nospicy">${nospicy}</div>`;
 
+  // Translate section
+  html+=`<div class="tab-section" data-section="translate"><div class="dash-section" id="tr-container"></div></div>`;
+
   el.innerHTML=html;
   document.getElementById('calc-thb').addEventListener('input',calcFromThb);
   document.getElementById('calc-twd').addEventListener('input',calcFromTwd);
+  renderTranslateUI();
   _dashRendered=true;
+}
+
+/* Translate */
+const TR_KEY_LS='gemini_api_key';
+function getGeminiKey(){return localStorage.getItem(TR_KEY_LS)||'';}
+function setGeminiKey(k){localStorage.setItem(TR_KEY_LS,k);}
+function clearGeminiKey(){localStorage.removeItem(TR_KEY_LS);}
+
+function renderTranslateUI(){
+  const container=document.getElementById('tr-container');
+  if(!container)return;
+  const key=getGeminiKey();
+  if(!key){
+    container.innerHTML=`<div class="tr-setup">
+      <h3 style="font-size:13px;font-weight:700;margin-bottom:12px">🔤 中泰即時翻譯</h3>
+      <p>首次使用需輸入 Gemini API Key<br>（免費申請，由旅伴提供）</p>
+      <input class="tr-key-input" id="tr-key-field" type="password" placeholder="貼上 Gemini API Key">
+      <button class="tr-save-btn" id="tr-save-btn">儲存並開始使用</button>
+    </div>`;
+    document.getElementById('tr-save-btn').addEventListener('click',()=>{
+      const v=document.getElementById('tr-key-field').value.trim();
+      if(!v)return;
+      setGeminiKey(v);
+      renderTranslateUI();
+    });
+    return;
+  }
+  container.innerHTML=`<h3 style="font-size:13px;font-weight:700;margin-bottom:10px">🔤 中文 → 泰文翻譯</h3>
+    <div class="tr-area">
+      <div class="tr-input-wrap"><textarea class="tr-input" id="tr-input" placeholder="輸入中文，例如：這個不要辣" rows="3"></textarea></div>
+      <button class="tr-send-btn" id="tr-send-btn">翻譯</button>
+      <div class="tr-result-box" id="tr-result-box"><div class="tr-result-placeholder">翻譯結果將顯示在這裡</div></div>
+      <button class="tr-copy-btn" id="tr-copy-btn" style="display:none">📋 複製泰文</button>
+      <button class="tr-reset-btn" id="tr-reset-btn">重設 API Key</button>
+    </div>`;
+  const input=document.getElementById('tr-input');
+  const sendBtn=document.getElementById('tr-send-btn');
+  const resultBox=document.getElementById('tr-result-box');
+  const copyBtn=document.getElementById('tr-copy-btn');
+  let lastThai='';
+
+  sendBtn.addEventListener('click',async()=>{
+    const text=input.value.trim();
+    if(!text)return;
+    sendBtn.disabled=true;
+    sendBtn.innerHTML='<span class="tr-spinner"></span>翻譯中…';
+    resultBox.innerHTML='<div class="tr-result-placeholder">翻譯中…</div>';
+    copyBtn.style.display='none';
+    try{
+      const res=await callGemini(text);
+      lastThai=res.thai||'';
+      let html=`<div class="tr-result-thai">${res.thai||'（無結果）'}</div>`;
+      if(res.romanization)html+=`<div class="tr-result-roman">🔊 ${res.romanization}</div>`;
+      resultBox.innerHTML=html;
+      if(lastThai)copyBtn.style.display='block';
+    }catch(e){
+      resultBox.innerHTML=`<div class="tr-result-placeholder" style="color:#b85c00">翻譯失敗：${e.message}</div>`;
+    }
+    sendBtn.disabled=false;
+    sendBtn.textContent='翻譯';
+  });
+
+  // Enter key to send
+  input.addEventListener('keydown',e=>{
+    if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendBtn.click();}
+  });
+
+  copyBtn.addEventListener('click',()=>{
+    if(!lastThai)return;
+    navigator.clipboard.writeText(lastThai).then(()=>{
+      copyBtn.textContent='✅ 已複製';
+      setTimeout(()=>{copyBtn.textContent='📋 複製泰文';},1500);
+    }).catch(()=>{});
+  });
+
+  document.getElementById('tr-reset-btn').addEventListener('click',()=>{
+    if(confirm('確定要重設 API Key？')){clearGeminiKey();renderTranslateUI();}
+  });
+}
+
+async function callGemini(text){
+  const key=getGeminiKey();
+  if(!key)throw new Error('未設定 API Key');
+  const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${key}`;
+  const body={
+    contents:[{parts:[{text:`你是旅遊翻譯助手。將以下中文翻譯成泰文，並提供羅馬拼音（方便發音）。
+請用以下 JSON 格式回覆（不要加 markdown）：
+{"thai":"泰文翻譯","romanization":"羅馬拼音"}
+
+情境：在泰國曼谷旅遊，對話對象是店員/司機/服務生，語氣要禮貌自然。
+
+中文：${text}`}]}],
+    generationConfig:{temperature:0.3,maxOutputTokens:256}
+  };
+  const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(!r.ok){
+    const err=await r.json().catch(()=>({}));
+    throw new Error(err.error?.message||`HTTP ${r.status}`);
+  }
+  const j=await r.json();
+  const raw=j.candidates?.[0]?.content?.parts?.[0]?.text||'';
+  // Parse JSON from response (handle possible markdown wrapping)
+  const cleaned=raw.replace(/```json\s*/g,'').replace(/```\s*/g,'').trim();
+  try{return JSON.parse(cleaned);}catch(e){
+    // Fallback: treat entire response as Thai text
+    return {thai:raw.trim(),romanization:''};
+  }
 }
 
 /* Bottom Sheet */
