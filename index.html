@@ -442,58 +442,144 @@ const PLACES = [
 ];
 const MAP_COLORS={food:'#ff9500',spot:'#34c759',spa:'#5ac8fa',hotel:'#af52de',bar:'#c89b3c'};
 
-/* ── Michelin Data (Pathum Wan, excl ฿฿฿฿) ── */
+/* ── Michelin Data (excl ฿฿฿฿) ── */
 const MICHELIN_AWARD_COLORS={'1 Star':'#e4002b','Bib Gourmand':'#ff9500','Selected Restaurants':'#5ac8fa'};
-const MICHELIN_DATA=[
-  {name:"Saneh Jaan",cuisine:"Thai",cg:"thai",price:"฿฿",award:"1 Star",lat:13.7356117,lng:100.5457543,addr:"Sindhorn Tower",desc:"精緻泰式經典，優雅氛圍，適合商務或特殊場合",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/saneh-jaan"},
-  {name:"Coda",cuisine:"Thai contemporary",cg:"thai",price:"฿฿฿",award:"1 Star",lat:13.7360104,lng:100.5460976,addr:"130-132 Wireless Rd",desc:"融合澳洲經驗與泰式風味的當代泰菜",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/coda-1206365"},
-  {name:"Thai Niyom",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Bib Gourmand",lat:13.741953,lng:100.549126,addr:"Mahatun Plaza",desc:"全泰各地區家常料理，清邁到合艾口味都有",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/thai-niyom"},
-  {name:"Baannok Bangkok",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7417152,lng:100.5433534,addr:"2F, Lang Suan",desc:"道地呵叻風味泰菜，甜味較少的東北菜系",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/baannok-bangkok"},
-  {name:"Ma Maison",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7463409,lng:100.5470373,addr:"4 Soi Somkid",desc:"歷史園林中的泰式家常菜，環境優美",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/ma-maison-1217053"},
-  {name:"Khum Hom",cuisine:"Thai contemporary",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7476254,lng:100.5472235,addr:"Movenpick BDMS",desc:"健康取向的現代泰式料理",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/khum-hom"},
-  {name:"Soma",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7475397,lng:100.5305756,addr:"Siam Patumwan House",desc:"三位名廚聯手的創意傳統泰菜",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/soma-1242092"},
-  {name:"Bangkok Bold",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7441907,lng:100.5460855,addr:"Central Embassy LGF",desc:"從烹飪工作室起家的道地泰菜",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/bangkok-bold-kitchen-central-embassy"},
-  {name:"Grok",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7470706,lng:100.545948,addr:"14 Yolo Forest",desc:"深色木質調空間，精緻泰式風味",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/grok"},
-  {name:"Vilas",cuisine:"Thai contemporary",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.736822,lng:100.5429834,addr:"Unit E103",desc:"色彩繽紛的現代泰菜，活力十足",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/vilas"},
-  {name:"Sra Bua by Kiin Kiin",cuisine:"Thai contemporary",cg:"thai",price:"฿฿฿",award:"Selected Restaurants",lat:13.7486372,lng:100.53521,addr:"Siam Kempinski GF",desc:"哥本哈根 Kiin Kiin 姊妹店，創新泰菜",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/sra-bua-by-kiin-kiin"},
-  {name:"TAAN",cuisine:"Thai contemporary",cg:"thai",price:"฿฿฿",award:"Selected Restaurants",lat:13.7470692,lng:100.5269622,addr:"Siam@Siam 25F",desc:"屋頂餐廳，在地食材當代泰式料理",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/taan"},
-  {name:"Khaan",cuisine:"Thai contemporary",cg:"thai",price:"฿฿฿",award:"Selected Restaurants",lat:13.7471397,lng:100.5460168,addr:"14/3 Soi Som Khit",desc:"Chef Aom 主理的虎式當代泰菜",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/khaan"},
-  {name:"Bisou",cuisine:"Modern Cuisine",cg:"european",price:"฿฿",award:"Selected Restaurants",lat:13.7376896,lng:100.5420893,addr:"68 Soi Langsuan 9",desc:"法籍主廚的時尚巴黎風現代料理",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/bisou"},
-  {name:"Lenzi Tuscan Kitchen",cuisine:"Italian",cg:"european",price:"฿฿฿",award:"Selected Restaurants",lat:13.737625,lng:100.55078,addr:"69/2 Soi Ruam Ruedi 2",desc:"正宗托斯卡尼家庭式義大利菜",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/lenzi"},
-  {name:"Nan Bei",cuisine:"Chinese",cg:"chinese",price:"฿฿฿",award:"Selected Restaurants",lat:13.7432557,lng:100.5489366,addr:"Rosewood 19F",desc:"南北融合中式料理，景觀極佳",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/nan-bei"},
-  {name:"Tang Sui Heng",cuisine:"Street Food",cg:"street",price:"฿",award:"Selected Restaurants",lat:13.7468255,lng:100.5237754,addr:"649 Banthat Thong Rd",desc:"50年老字號街邊小吃，在地人排隊名店",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/tung-sui-heng-pochana-stadium-one"}
+const MICH_DISTRICTS=[
+  {id:'pathum_wan',label:'Pathum Wan',center:[13.742,100.540]},
+  {id:'phra_nakhon',label:'Phra Nakhon',center:[13.752,100.498]}
 ];
-const MICH_CUISINE_GROUPS={thai:'🇹🇭 泰式',european:'🇪🇺 歐式',chinese:'🇨🇳 中式',street:'🍜 小吃'};
+const MICHELIN_DATA=[
+  // Pathum Wan
+  {name:"Saneh Jaan",cuisine:"Thai",cg:"thai",price:"฿฿",award:"1 Star",lat:13.7356117,lng:100.5457543,addr:"Sindhorn Tower",desc:"精緻泰式經典，優雅氛圍，適合商務或特殊場合",district:"pathum_wan"},
+  {name:"Coda",cuisine:"Thai contemporary",cg:"thai",price:"฿฿฿",award:"1 Star",lat:13.7360104,lng:100.5460976,addr:"130-132 Wireless Rd",desc:"融合澳洲經驗與泰式風味的當代泰菜",district:"pathum_wan"},
+  {name:"Thai Niyom",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Bib Gourmand",lat:13.741953,lng:100.549126,addr:"Mahatun Plaza",desc:"全泰各地區家常料理，清邁到合艾口味都有",district:"pathum_wan"},
+  {name:"Baannok Bangkok",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7417152,lng:100.5433534,addr:"2F, Lang Suan",desc:"道地呵叻風味泰菜，甜味較少的東北菜系",district:"pathum_wan"},
+  {name:"Ma Maison",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7463409,lng:100.5470373,addr:"4 Soi Somkid",desc:"歷史園林中的泰式家常菜，環境優美",district:"pathum_wan"},
+  {name:"Khum Hom",cuisine:"Thai contemporary",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7476254,lng:100.5472235,addr:"Movenpick BDMS",desc:"健康取向的現代泰式料理",district:"pathum_wan"},
+  {name:"Soma",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7475397,lng:100.5305756,addr:"Siam Patumwan House",desc:"三位名廚聯手的創意傳統泰菜",district:"pathum_wan"},
+  {name:"Bangkok Bold",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7441907,lng:100.5460855,addr:"Central Embassy LGF",desc:"從烹飪工作室起家的道地泰菜",district:"pathum_wan"},
+  {name:"Grok",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7470706,lng:100.545948,addr:"14 Yolo Forest",desc:"深色木質調空間，精緻泰式風味",district:"pathum_wan"},
+  {name:"Vilas",cuisine:"Thai contemporary",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.736822,lng:100.5429834,addr:"Unit E103",desc:"色彩繽紛的現代泰菜，活力十足",district:"pathum_wan"},
+  {name:"Sra Bua by Kiin Kiin",cuisine:"Thai contemporary",cg:"thai",price:"฿฿฿",award:"Selected Restaurants",lat:13.7486372,lng:100.53521,addr:"Siam Kempinski GF",desc:"哥本哈根 Kiin Kiin 姊妹店，創新泰菜",district:"pathum_wan"},
+  {name:"TAAN",cuisine:"Thai contemporary",cg:"thai",price:"฿฿฿",award:"Selected Restaurants",lat:13.7470692,lng:100.5269622,addr:"Siam@Siam 25F",desc:"屋頂餐廳，在地食材當代泰式料理",district:"pathum_wan"},
+  {name:"Khaan",cuisine:"Thai contemporary",cg:"thai",price:"฿฿฿",award:"Selected Restaurants",lat:13.7471397,lng:100.5460168,addr:"14/3 Soi Som Khit",desc:"Chef Aom 主理的虎式當代泰菜",district:"pathum_wan"},
+  {name:"Bisou",cuisine:"Modern Cuisine",cg:"european",price:"฿฿",award:"Selected Restaurants",lat:13.7376896,lng:100.5420893,addr:"68 Soi Langsuan 9",desc:"法籍主廚的時尚巴黎風現代料理",district:"pathum_wan"},
+  {name:"Lenzi Tuscan Kitchen",cuisine:"Italian",cg:"european",price:"฿฿฿",award:"Selected Restaurants",lat:13.737625,lng:100.55078,addr:"69/2 Soi Ruam Ruedi 2",desc:"正宗托斯卡尼家庭式義大利菜",district:"pathum_wan"},
+  {name:"Nan Bei",cuisine:"Chinese",cg:"chinese",price:"฿฿฿",award:"Selected Restaurants",lat:13.7432557,lng:100.5489366,addr:"Rosewood 19F",desc:"南北融合中式料理，景觀極佳",district:"pathum_wan"},
+  {name:"Tang Sui Heng",cuisine:"Street Food",cg:"street",price:"฿",award:"Selected Restaurants",lat:13.7468255,lng:100.5237754,addr:"649 Banthat Thong Rd",desc:"50年老字號街邊小吃，在地人排隊名店",district:"pathum_wan"},
+  // Phra Nakhon
+  {name:"Jay Fai",cuisine:"Street Food, Thai",cg:"street",price:"฿฿฿",award:"1 Star",lat:13.7529,lng:100.5066,addr:"327 Maha Chai Rd",desc:"傳奇街頭小吃一星，蟹肉蛋捲聞名全球，需排隊",district:"phra_nakhon"},
+  {name:"Kolun.h",cuisine:"Noodles",cg:"noodles",price:"฿",award:"Bib Gourmand",lat:13.7508,lng:100.5016,addr:"110/1 Mahannop Rd",desc:"必比登船麵，濃郁湯頭，份量小價格實惠",district:"phra_nakhon"},
+  {name:"Pad Thai Fai Ta Lu",cuisine:"Noodles",cg:"noodles",price:"฿",award:"Bib Gourmand",lat:13.7527,lng:100.5026,addr:"115/5 Dinso Rd",desc:"炭火炒粿條名店，必比登認證的經典泰式炒麵",district:"phra_nakhon"},
+  {name:"K. Panich",cuisine:"Street Food",cg:"street",price:"฿",award:"Bib Gourmand",lat:13.7528,lng:100.5036,addr:"431-433 Tanao Rd",desc:"百年古早甜品店，椰奶糯米糕必吃",district:"phra_nakhon"},
+  {name:"Thai Tham",cuisine:"Thai-Chinese, Small eats",cg:"street",price:"฿",award:"Bib Gourmand",lat:13.7547,lng:100.5012,addr:"28/1 Phraeng Phuthon Rd",desc:"中泰融合小吃，在地人推薦的隱藏美食",district:"phra_nakhon"},
+  {name:"Ten Suns",cuisine:"Noodles, Small eats",cg:"noodles",price:"฿",award:"Bib Gourmand",lat:13.7607,lng:100.5059,addr:"456 Wisut Kasat Rd",desc:"必比登麵食小吃，多樣化的麵類選擇",district:"phra_nakhon"},
+  {name:"Aheesah Roddee",cuisine:"Asian",cg:"thai",price:"฿",award:"Selected Restaurants",lat:13.7580,lng:100.5010,addr:"103-105 Tani Rd",desc:"米其林推薦的亞洲風味小吃",district:"phra_nakhon"},
+  {name:"Rongros",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7460,lng:100.4920,addr:"392/16 Maha Rat Rd",desc:"河畔泰式餐廳，靠近臥佛寺",district:"phra_nakhon"},
+  {name:"Supanniga Eating Room",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7461,lng:100.4921,addr:"392/25-26 Maha Rat Rd",desc:"東部泰菜名店，河景座位氣氛佳",district:"phra_nakhon"},
+  {name:"Sang Thatien",cuisine:"Thai",cg:"thai",price:"฿฿฿",award:"Selected Restaurants",lat:13.7455,lng:100.4915,addr:"75 Maha Rat Rd",desc:"臥佛寺旁精緻泰菜，環境典雅",district:"phra_nakhon"},
+  {name:"Chakrabongse Dining",cuisine:"Thai",cg:"thai",price:"฿฿฿",award:"Selected Restaurants",lat:13.7452,lng:100.4910,addr:"396/1 Maha Rat Rd",desc:"河畔花園中的皇室風格泰菜",district:"phra_nakhon"}
+];
+const MICH_ALL_CUISINE_GROUPS={thai:'🇹🇭 泰式',european:'🇪🇺 歐式',chinese:'🇨🇳 中式',street:'🍜 小吃',noodles:'🍜 麵食'};
 const MICH_AWARD_LABELS={'1 Star':'⭐ 一星','Bib Gourmand':'🍽 必比登','Selected Restaurants':'📋 推薦'};
+
+/* ── Michelin helpers ── */
+let _michUserPos=null;
+let _michActiveDistrict='pathum_wan';
+
+function haversine(lat1,lng1,lat2,lng2){
+  const R=6371000,toRad=x=>x*Math.PI/180;
+  const dLat=toRad(lat2-lat1),dLng=toRad(lng2-lng1);
+  const a=Math.sin(dLat/2)**2+Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLng/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+function fmtDist(m){return m<1000?Math.round(m)+'m':(m/1000).toFixed(1)+'km';}
 
 function michAwardBadge(award){
   const cls=award==='1 Star'?'mich-award-star':award==='Bib Gourmand'?'mich-award-bib':'mich-award-sel';
   const label=MICH_AWARD_LABELS[award]||award;
   return `<span class="mich-card-award ${cls}">${label}</span>`;
 }
+
+function michGetDistrictData(distId){return MICHELIN_DATA.filter(r=>r.district===distId);}
+function michGetCuisineGroups(data){
+  const groups={};
+  data.forEach(r=>{if(MICH_ALL_CUISINE_GROUPS[r.cg])groups[r.cg]=MICH_ALL_CUISINE_GROUPS[r.cg];});
+  return groups;
+}
+
+function michRequestLocation(){
+  if(!navigator.geolocation)return;
+  navigator.geolocation.getCurrentPosition(pos=>{
+    _michUserPos={lat:pos.coords.latitude,lng:pos.coords.longitude};
+    filterMichelin();
+  },()=>{},{enableHighAccuracy:true,timeout:10000});
+}
+
+function renderMichFilters(){
+  const el=document.getElementById('day0');
+  if(!el)return;
+  const data=michGetDistrictData(_michActiveDistrict);
+  const cuisines=michGetCuisineGroups(data);
+  const awards={};data.forEach(r=>{if(MICH_AWARD_LABELS[r.award])awards[r.award]=MICH_AWARD_LABELS[r.award];});
+  const prices=new Set();data.forEach(r=>prices.add(r.price));
+  const sortedPrices=['฿','฿฿','฿฿฿'].filter(p=>prices.has(p));
+  let h='<div class="mich-filters">';
+  h+='<div class="mich-filter-row"><span class="mich-filter-label">菜系</span>';
+  Object.entries(cuisines).forEach(([k,v])=>{h+=`<button class="mich-pill" data-cg="${k}">${v}</button>`;});
+  h+='</div>';
+  h+='<div class="mich-filter-row"><span class="mich-filter-label">星級</span>';
+  Object.entries(awards).forEach(([k,v])=>{h+=`<button class="mich-pill" data-award="${k}">${v}</button>`;});
+  h+='</div>';
+  h+='<div class="mich-filter-row"><span class="mich-filter-label">價位</span>';
+  sortedPrices.forEach(p=>{h+=`<button class="mich-pill" data-price="${p}">${p}</button>`;});
+  h+='</div></div>';
+  const container=el.querySelector('.mich-filters-container');
+  if(container){
+    container.innerHTML=h;
+    container.querySelectorAll('.mich-pill').forEach(pill=>{
+      pill.addEventListener('click',()=>{pill.classList.toggle('on');filterMichelin();});
+    });
+  }
+}
+
 function filterMichelin(){
   const el=document.getElementById('day0');
   if(!el)return;
+  const distData=michGetDistrictData(_michActiveDistrict);
   const activeC=new Set();el.querySelectorAll('.mich-pill[data-cg].on').forEach(p=>activeC.add(p.dataset.cg));
   const activeA=new Set();el.querySelectorAll('.mich-pill[data-award].on').forEach(p=>activeA.add(p.dataset.award));
   const activeP=new Set();el.querySelectorAll('.mich-pill[data-price].on').forEach(p=>activeP.add(p.dataset.price));
-  const filtered=MICHELIN_DATA.filter(r=>{
+  let filtered=distData.filter(r=>{
     if(activeC.size&&!activeC.has(r.cg))return false;
     if(activeA.size&&!activeA.has(r.award))return false;
     if(activeP.size&&!activeP.has(r.price))return false;
     return true;
   });
+  // Distance sort
+  let useDistance=false;
+  if(_michUserPos){
+    filtered=filtered.map(r=>{
+      r._dist=haversine(_michUserPos.lat,_michUserPos.lng,r.lat,r.lng);
+      return r;
+    });
+    const minDist=Math.min(...filtered.map(r=>r._dist));
+    if(minDist<=10000){useDistance=true;filtered.sort((a,b)=>a._dist-b._dist);}
+  }
   // Update list
   const listEl=el.querySelector('.mich-list');
   const countEl=el.querySelector('.mich-count');
-  if(countEl)countEl.textContent=`顯示 ${filtered.length} / ${MICHELIN_DATA.length} 間`;
+  if(countEl)countEl.textContent=`顯示 ${filtered.length} / ${distData.length} 間`+(useDistance?' · 依距離排序':'');
   if(listEl){
-    listEl.innerHTML=filtered.map(r=>`<div class="mich-card">
+    listEl.innerHTML=filtered.map(r=>{
+      const distBadge=useDistance?`<span style="color:var(--accent);font-weight:700">📍 ${fmtDist(r._dist)}</span>`:'';
+      return `<div class="mich-card">
       <div class="mich-card-head"><span class="mich-card-name">${r.name}</span>${michAwardBadge(r.award)}</div>
-      <div class="mich-card-meta"><span>${r.cuisine}</span><span>${r.price}</span><span>${r.addr}</span></div>
+      <div class="mich-card-meta"><span>${r.cuisine}</span><span>${r.price}</span><span>${r.addr}</span>${distBadge}</div>
       <div class="mich-card-desc">${r.desc}</div>
       <a class="mich-card-nav" href="${mapUrl(r.name+' Bangkok')}" target="_blank" rel="noopener">📍 Google Maps</a>
-    </div>`).join('');
+    </div>`;
+    }).join('');
   }
   // Update map
   const containerId='michmap';
@@ -503,7 +589,9 @@ function filterMichelin(){
 function initMichMap(containerId,data){
   const el=document.getElementById(containerId);
   if(!el||el.offsetParent===null)return;
-  const map=L.map(containerId,{scrollWheelZoom:true,dragging:true,zoomControl:true}).setView([13.742,100.540],14);
+  const dist=MICH_DISTRICTS.find(d=>d.id===_michActiveDistrict);
+  const center=dist?dist.center:[13.745,100.535];
+  const map=L.map(containerId,{scrollWheelZoom:true,dragging:true,zoomControl:true}).setView(center,14);
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM',maxZoom:18}).addTo(map);
   const group=[];
   data.forEach(r=>{
@@ -514,6 +602,10 @@ function initMichMap(containerId,data){
   });
   if(group.length>1)map.fitBounds(group,{padding:[25,25]});
   else if(group.length===1)map.setView(group[0],15);
+  // Show user position on map if available
+  if(_michUserPos){
+    L.marker([_michUserPos.lat,_michUserPos.lng],{icon:L.divIcon({className:'',html:'<div class="leaflet-loc-dot"></div>',iconSize:[14,14],iconAnchor:[7,7]})}).addTo(map).bindPopup('📍 你在這裡');
+  }
   // Locate button
   const locBtn=document.createElement('button');
   locBtn.className='map-locate-btn';locBtn.innerHTML='📍';locBtn.title='顯示我的位置';
@@ -525,10 +617,12 @@ function initMichMap(containerId,data){
     navigator.geolocation.getCurrentPosition(pos=>{
       locBtn.classList.remove('locating');
       const lat=pos.coords.latitude,lng=pos.coords.longitude,acc=pos.coords.accuracy;
+      _michUserPos={lat,lng};
       if(locMarker){map.removeLayer(locMarker);map.removeLayer(locCircle);}
       locMarker=L.marker([lat,lng],{icon:L.divIcon({className:'',html:'<div class="leaflet-loc-dot"></div>',iconSize:[14,14],iconAnchor:[7,7]})}).addTo(map).bindPopup('📍 你在這裡');
       locCircle=L.circle([lat,lng],{radius:acc,color:'#007aff',fillColor:'#007aff',fillOpacity:.1,weight:1}).addTo(map);
       map.setView([lat,lng],15);locMarker.openPopup();
+      filterMichelin();
     },err=>{
       locBtn.classList.remove('locating');
       alert('定位失敗：'+(err.code===1?'請允許位置存取權限':err.code===2?'無法取得位置':'定位逾時'));
@@ -883,7 +977,7 @@ function render(){
       const sec=subtab.dataset.subtab;
       dv.querySelectorAll('.tab-section').forEach(s=>s.classList.toggle('active',s.dataset.section===sec));
       // Init michelin map when switching to michelin tab
-      if(sec==='michelin')setTimeout(()=>initMichMap('michmap',MICHELIN_DATA),100);
+      if(sec==='michelin'){setTimeout(()=>{renderMichFilters();filterMichelin();michRequestLocation();},100);}
       return;
     }
     if(e.target.closest('a'))return;
@@ -1017,23 +1111,17 @@ function renderDashboard(){
   html+=`<div class="tab-section" data-section="translate"><div class="dash-section" id="tr-container"></div></div>`;
 
   // Michelin section
-  let michHtml='<div class="dash-section"><h3>🍽 米其林美食地圖 · Pathum Wan</h3>';
-  michHtml+='<p style="font-size:12px;color:var(--text-light);margin-bottom:10px">2025 米其林指南｜飯店周邊步行可達</p>';
-  // Filters
-  michHtml+='<div class="mich-filters">';
-  // Cuisine
-  michHtml+='<div class="mich-filter-row"><span class="mich-filter-label">菜系</span>';
-  Object.entries(MICH_CUISINE_GROUPS).forEach(([k,v])=>{michHtml+=`<button class="mich-pill" data-cg="${k}">${v}</button>`;});
+  let michHtml='<div class="dash-section"><h3>🍽 米其林美食地圖</h3>';
+  michHtml+='<p style="font-size:12px;color:var(--text-light);margin-bottom:10px">2025 米其林指南｜點擊區域切換</p>';
+  // District buttons
+  michHtml+='<div style="display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap">';
+  MICH_DISTRICTS.forEach((d,i)=>{
+    const active=i===0;
+    michHtml+=`<button class="mich-dist-btn${active?' on':''}" data-dist="${d.id}" style="padding:5px 12px;border-radius:16px;border:1.5px solid var(--accent);background:${active?'var(--accent)':'transparent'};color:${active?'#fff':'var(--accent)'};font-size:12px;font-weight:600;cursor:pointer">${d.label}</button>`;
+  });
   michHtml+='</div>';
-  // Award
-  michHtml+='<div class="mich-filter-row"><span class="mich-filter-label">星級</span>';
-  Object.entries(MICH_AWARD_LABELS).forEach(([k,v])=>{michHtml+=`<button class="mich-pill" data-award="${k}">${v}</button>`;});
-  michHtml+='</div>';
-  // Price
-  michHtml+='<div class="mich-filter-row"><span class="mich-filter-label">價位</span>';
-  ['฿','฿฿','฿฿฿'].forEach(p=>{michHtml+=`<button class="mich-pill" data-price="${p}">${p}</button>`;});
-  michHtml+='</div>';
-  michHtml+='</div>';
+  // Dynamic filters container
+  michHtml+='<div class="mich-filters-container"></div>';
   // Legend
   michHtml+='<div class="map-legend" style="margin-bottom:8px">';
   michHtml+='<div class="map-legend-item"><div class="map-legend-dot" style="background:#e4002b"></div>一星</div>';
@@ -1043,17 +1131,9 @@ function renderDashboard(){
   // Map
   michHtml+='<div class="map-wrap"><div class="map-lg" id="michmap"></div></div>';
   // Count + List
-  michHtml+=`<div class="mich-count">顯示 ${MICHELIN_DATA.length} / ${MICHELIN_DATA.length} 間</div>`;
-  michHtml+='<div class="mich-list">';
-  MICHELIN_DATA.forEach(r=>{
-    michHtml+=`<div class="mich-card">
-      <div class="mich-card-head"><span class="mich-card-name">${r.name}</span>${michAwardBadge(r.award)}</div>
-      <div class="mich-card-meta"><span>${r.cuisine}</span><span>${r.price}</span><span>${r.addr}</span></div>
-      <div class="mich-card-desc">${r.desc}</div>
-      <a class="mich-card-nav" href="${mapUrl(r.name+' Bangkok')}" target="_blank" rel="noopener">📍 Google Maps</a>
-    </div>`;
-  });
-  michHtml+='</div></div>';
+  const initData=michGetDistrictData('pathum_wan');
+  michHtml+=`<div class="mich-count">顯示 ${initData.length} / ${initData.length} 間</div>`;
+  michHtml+='<div class="mich-list"></div></div>';
   html+=`<div class="tab-section" data-section="michelin">${michHtml}</div>`;
 
   el.innerHTML=html;
@@ -1062,13 +1142,19 @@ function renderDashboard(){
   renderTranslateUI();
   _dashRendered=true;
 
-  // Michelin filter pills (toggle on/off)
-  el.querySelectorAll('.mich-pill').forEach(pill=>{
-    pill.addEventListener('click',()=>{
-      pill.classList.toggle('on');
+  // Michelin district buttons
+  el.querySelectorAll('.mich-dist-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      el.querySelectorAll('.mich-dist-btn').forEach(b=>{b.style.background='transparent';b.style.color='var(--accent)';b.classList.remove('on');});
+      btn.style.background='var(--accent)';btn.style.color='#fff';btn.classList.add('on');
+      _michActiveDistrict=btn.dataset.dist;
+      renderMichFilters();
       filterMichelin();
     });
   });
+  // Init filters and list for first district
+  renderMichFilters();
+  filterMichelin();
 }
 
 /* Translate */
