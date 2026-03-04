@@ -229,28 +229,26 @@ const FALLBACK_RATE = 0.92;
 
 const DAYS = [
   {
-    day:1, date:"07/18（六）", title:"抵達＋海鮮吃到飽",
+    day:1, date:"07/18（六）", title:"抵達＋米其林泰菜＋高空酒吧",
     hotel:"Grande Centre Point Prestige Bangkok",
-    warns:["飯店入住 14:00｜建議 Klook 先買 Goji 含訂位"],
+    warns:["飯店入住 14:00｜Baannok BKK 需預約（tel: 063-9341416）","Red Sky Bar Dress Code: Smart casual（不可穿短褲/拖鞋）"],
     items:[
       {t:"12:00~14:40",a:"✈ 抵達 BKK＋入境＋前往飯店",n:"ARL 到 Phaya Thai 約 40 分＋BTS 轉乘｜加 buffer 共約 90 分",m:"Grande Centre Point Prestige Bangkok",from:"BKK 機場",to:"Prestige 飯店",dur:"約60~90分",tags:["ARL+BTS"]},
-      {t:"14:40~16:10",a:"🏨 入住＋短休息補血",n:"標準入住 14:00｜先處理時差"},
-      {t:"16:10~16:30",a:"🚃 BTS 前往 Asok",n:"站間約 20 分",from:"Ratchadamri",to:"Asok",dur:"約20分",tags:["฿30~65/人"]},
-      {t:"16:30~17:30",a:"💆 Let's Relax 足底按摩",hours:"10:00~00:00",n:"足底 60 分 ฿800/人｜建議預約｜週末傍晚容易滿",m:"Let's Relax Spa Sukhumvit 14 Bangkok"},
-      {t:"17:30~18:00",a:"🚃 BTS 前往 Phrom Phong",from:"Asok",to:"Phrom Phong",dur:"約15分",tags:["฿17~65/人"]},
-      {t:"18:00~19:15",a:"🛍 EMSPHERE 逛街",hours:"10:00~22:00",n:"Sukhumvit 新一代大型商場",m:"EMSPHERE Bangkok"},
-      {t:"19:15~19:45",a:"🚕 Grab 前往海鮮吃到飽",n:"週六晚高峰｜短程",from:"Phrom Phong",to:"Sukhumvit 22",dur:"約15~30分",tags:["฿80~180/車"]},
-      {t:"19:45~21:45",a:"🍽 高級海鮮吃到飽",meal:"夜",shop:"Goji Kitchen + Bar",type:"海鮮自助",station:"Sukhumvit 22",oneliner:"Marriott 海鮮自助，牡蠣/冰上海鮮/壽司刺身站",hours:"17:30~22:00",price:"฿2,599++/人（週末）",n:"Klook 先買含訂位｜不辣友善：海鮮冰台、烤物、日式站都能避辣",m:"Goji Kitchen + Bar Bangkok",nospicy:"海鮮冰台/烤物/壽司刺身/牛排/甜點"},
-      {t:"22:10~23:10",a:"🌃 Octave Rooftop 夜景",meal:"小吃",shop:"Octave Rooftop Lounge & Bar",type:"屋頂酒吧",station:"Sukhumvit",oneliner:"高空夜景＋雞尾酒",hours:"17:00~02:00",price:"฿300~500/人",n:"建議訂位",m:"Octave Rooftop Lounge Bar Bangkok"},
-      {t:"23:10~00:00",a:"🚕 Grab 回飯店",n:"保守 25~50 分",from:"Sukhumvit",to:"Prestige",dur:"約25~50分",tags:["฿160~350/車"]}
+      {t:"14:40~16:00",a:"🏨 入住＋短休息補血",n:"標準入住 14:00｜先處理時差"},
+      {t:"16:00~17:00",a:"💆 Let's Relax CentralWorld 按摩",hours:"10:00~00:00",n:"2F Dazzle Zone｜足底 60 分 ฿800/人｜BTS Chit Lom Exit 6 步行 450m",m:"Let's Relax Spa CentralWorld Bangkok"},
+      {t:"17:00~18:15",a:"🛍 Gaysorn Amarin 逛街",hours:"10:00~21:00",n:"BTS Chit Lom 空橋直達｜潮流商場",m:"Gaysorn Amarin Bangkok"},
+      {t:"18:30~20:15",a:"🍽 Baannok BKK 晚餐",meal:"夜",shop:"Baannok BKK",type:"創意泰菜",station:"Lang Suan",oneliner:"米其林指南收錄，鄉村風創意泰菜",hours:"11:00~22:00",price:"~฿500~1,000/人",n:"⚠️ 需預約｜2F VIVRE Building, 34/3 Lang Suan Rd｜BTS Chit Lom 步行 350m",m:"Baannok BKK Lang Suan Bangkok",nospicy:"烤魚/烤肉/炒蔬菜/湯品（點餐時告知不辣）",alts:[
+        {name:"Copper Beyond Buffet",type:"自助餐",station:"Gaysorn Amarin",oneliner:"高級自助餐 Buffet（同區替代）",hours:"11:00~22:00",price:"~฿1,200~1,800/人",warn:"同區 Plan B｜需預約",map:"Copper Beyond Buffet Gaysorn Amarin Bangkok"}
+      ]},
+      {t:"20:30~22:00",a:"🌃 Red Sky Bar 高空夜景",meal:"小吃",shop:"Red Sky Bar",type:"屋頂酒吧",station:"CentralWorld",oneliner:"Centara Grand 55-56F 高空酒吧",hours:"17:00~01:00",price:"~฿300~500/人",n:"56F Bar 免預約｜⚠️ Smart casual dress code",m:"Red Sky Bar Centara Grand CentralWorld Bangkok"},
+      {t:"22:00~22:15",a:"🚶 步行回飯店",n:"CentralWorld 步行約 10~15 分回 Prestige",from:"CentralWorld",to:"Prestige",dur:"約10~15分"}
     ],
     budget:[
       ["交通 ARL+BTS ×5","~฿1,000"],
       ["按摩 Let's Relax ×5","฿4,000"],
-      ["Goji 海鮮吃到飽 ×5","~฿15,300"],
-      ["Octave 飲品 ×5","~฿2,500"],
-      ["Grab（全日）","~฿1,500"],
-      ["合計","~฿24,300"]
+      ["Baannok BKK 晚餐 ×5","~฿3,750~5,000"],
+      ["Red Sky Bar 飲品 ×5","~฿2,500"],
+      ["合計","~฿11,250~12,500"]
     ]
   },
   {
