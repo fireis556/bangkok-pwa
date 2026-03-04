@@ -812,10 +812,11 @@ function renderTranslateUI(){
   }
   container.innerHTML=`<h3 style="font-size:13px;font-weight:700;margin-bottom:10px">🔤 中文 → 泰文翻譯</h3>
     <div class="tr-area">
-      <div class="tr-input-wrap"><textarea class="tr-input" id="tr-input" placeholder="輸入中文，例如：這個不要辣" rows="3"></textarea></div>
+      <div class="tr-input-wrap"><textarea class="tr-input" id="tr-input" placeholder="輸入中文，例如：這個不要辣" rows="3" maxlength="200"></textarea><div style="text-align:right;font-size:10px;color:var(--text-light);margin-top:2px"><span id="tr-charcount">0</span>/200</div></div>
       <button class="tr-send-btn" id="tr-send-btn">翻譯</button>
       <div class="tr-result-box" id="tr-result-box"><div class="tr-result-placeholder">翻譯結果將顯示在這裡</div></div>
       <button class="tr-copy-btn" id="tr-copy-btn" style="display:none">📋 複製泰文</button>
+      <div style="font-size:10px;color:var(--text-light);text-align:center;margin-top:8px">⚡ 每日共 250 次（5人共用 = 每人約 50 次/天）</div>
       <button class="tr-reset-btn" id="tr-reset-btn">重設 API Key</button>
     </div>`;
   const input=document.getElementById('tr-input');
@@ -845,6 +846,9 @@ function renderTranslateUI(){
     sendBtn.textContent='翻譯';
   });
 
+  // Char counter
+  const charcount=document.getElementById('tr-charcount');
+  input.addEventListener('input',()=>{charcount.textContent=input.value.length;});
   // Enter key to send
   input.addEventListener('keydown',e=>{
     if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendBtn.click();}
