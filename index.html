@@ -221,6 +221,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .map-locate-btn.locating{animation:pulse-locate 1s ease infinite}
 @keyframes pulse-locate{0%,100%{box-shadow:0 2px 6px rgba(0,0,0,.2)}50%{box-shadow:0 2px 12px rgba(0,122,255,.5)}}
 .leaflet-loc-dot{width:14px;height:14px;border-radius:50%;background:#007aff;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.mich-filters{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.mich-filter-row{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.mich-filter-label{font-size:11px;font-weight:700;color:var(--text-light);min-width:32px}
+.mich-pill{padding:4px 10px;border-radius:14px;border:1.5px solid var(--border);background:transparent;color:var(--text);font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;white-space:nowrap}
+.mich-pill.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.mich-pill:active{transform:scale(.95)}
+.mich-card{background:var(--card-bg);border-radius:14px;padding:12px 14px;box-shadow:var(--shadow);margin-bottom:8px;animation:cardIn .3s ease both}
+.mich-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.mich-card-name{font-size:15px;font-weight:700;color:var(--text)}
+.mich-card-award{font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.mich-award-star{background:#e4002b;color:#fff}
+.mich-award-bib{background:#ff9500;color:#fff}
+.mich-award-sel{background:#f0f0f0;color:#666}
+.mich-card-meta{font-size:12px;color:var(--text-light);margin-top:4px;display:flex;gap:8px;flex-wrap:wrap}
+.mich-card-desc{font-size:12px;color:var(--text-light);margin-top:6px;line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.mich-card-nav{display:inline-block;margin-top:8px;padding:4px 12px;background:var(--accent);color:#fff;border-radius:8px;text-decoration:none;font-size:12px;font-weight:600}
+.mich-card-nav:active{opacity:.7}
+.mich-count{font-size:12px;color:var(--text-light);margin-bottom:8px}
+.mich-list{max-height:400px;overflow-y:auto;padding-right:4px}
 </style>
 </head>
 <body>
@@ -422,6 +441,101 @@ const PLACES = [
   {day:6,name:"素萬那普機場",cat:"spot",lat:13.6900,lng:100.7501,info:"回程",mq:"Suvarnabhumi Airport"}
 ];
 const MAP_COLORS={food:'#ff9500',spot:'#34c759',spa:'#5ac8fa',hotel:'#af52de',bar:'#c89b3c'};
+
+/* ── Michelin Data (Pathum Wan, excl ฿฿฿฿) ── */
+const MICHELIN_AWARD_COLORS={'1 Star':'#e4002b','Bib Gourmand':'#ff9500','Selected Restaurants':'#5ac8fa'};
+const MICHELIN_DATA=[
+  {name:"Saneh Jaan",cuisine:"Thai",cg:"thai",price:"฿฿",award:"1 Star",lat:13.7356117,lng:100.5457543,addr:"Sindhorn Tower",desc:"精緻泰式經典，優雅氛圍，適合商務或特殊場合",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/saneh-jaan"},
+  {name:"Coda",cuisine:"Thai contemporary",cg:"thai",price:"฿฿฿",award:"1 Star",lat:13.7360104,lng:100.5460976,addr:"130-132 Wireless Rd",desc:"融合澳洲經驗與泰式風味的當代泰菜",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/coda-1206365"},
+  {name:"Thai Niyom",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Bib Gourmand",lat:13.741953,lng:100.549126,addr:"Mahatun Plaza",desc:"全泰各地區家常料理，清邁到合艾口味都有",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/thai-niyom"},
+  {name:"Baannok Bangkok",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7417152,lng:100.5433534,addr:"2F, Lang Suan",desc:"道地呵叻風味泰菜，甜味較少的東北菜系",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/baannok-bangkok"},
+  {name:"Ma Maison",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7463409,lng:100.5470373,addr:"4 Soi Somkid",desc:"歷史園林中的泰式家常菜，環境優美",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/ma-maison-1217053"},
+  {name:"Khum Hom",cuisine:"Thai contemporary",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7476254,lng:100.5472235,addr:"Movenpick BDMS",desc:"健康取向的現代泰式料理",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/khum-hom"},
+  {name:"Soma",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7475397,lng:100.5305756,addr:"Siam Patumwan House",desc:"三位名廚聯手的創意傳統泰菜",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/soma-1242092"},
+  {name:"Bangkok Bold",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7441907,lng:100.5460855,addr:"Central Embassy LGF",desc:"從烹飪工作室起家的道地泰菜",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/bangkok-bold-kitchen-central-embassy"},
+  {name:"Grok",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7470706,lng:100.545948,addr:"14 Yolo Forest",desc:"深色木質調空間，精緻泰式風味",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/grok"},
+  {name:"Vilas",cuisine:"Thai contemporary",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.736822,lng:100.5429834,addr:"Unit E103",desc:"色彩繽紛的現代泰菜，活力十足",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/vilas"},
+  {name:"Sra Bua by Kiin Kiin",cuisine:"Thai contemporary",cg:"thai",price:"฿฿฿",award:"Selected Restaurants",lat:13.7486372,lng:100.53521,addr:"Siam Kempinski GF",desc:"哥本哈根 Kiin Kiin 姊妹店，創新泰菜",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/sra-bua-by-kiin-kiin"},
+  {name:"TAAN",cuisine:"Thai contemporary",cg:"thai",price:"฿฿฿",award:"Selected Restaurants",lat:13.7470692,lng:100.5269622,addr:"Siam@Siam 25F",desc:"屋頂餐廳，在地食材當代泰式料理",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/taan"},
+  {name:"Khaan",cuisine:"Thai contemporary",cg:"thai",price:"฿฿฿",award:"Selected Restaurants",lat:13.7471397,lng:100.5460168,addr:"14/3 Soi Som Khit",desc:"Chef Aom 主理的虎式當代泰菜",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/khaan"},
+  {name:"Bisou",cuisine:"Modern Cuisine",cg:"european",price:"฿฿",award:"Selected Restaurants",lat:13.7376896,lng:100.5420893,addr:"68 Soi Langsuan 9",desc:"法籍主廚的時尚巴黎風現代料理",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/bisou"},
+  {name:"Lenzi Tuscan Kitchen",cuisine:"Italian",cg:"european",price:"฿฿฿",award:"Selected Restaurants",lat:13.737625,lng:100.55078,addr:"69/2 Soi Ruam Ruedi 2",desc:"正宗托斯卡尼家庭式義大利菜",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/lenzi"},
+  {name:"Nan Bei",cuisine:"Chinese",cg:"chinese",price:"฿฿฿",award:"Selected Restaurants",lat:13.7432557,lng:100.5489366,addr:"Rosewood 19F",desc:"南北融合中式料理，景觀極佳",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/nan-bei"},
+  {name:"Tang Sui Heng",cuisine:"Street Food",cg:"street",price:"฿",award:"Selected Restaurants",lat:13.7468255,lng:100.5237754,addr:"649 Banthat Thong Rd",desc:"50年老字號街邊小吃，在地人排隊名店",url:"https://guide.michelin.com/en/bangkok-region/bangkok/restaurant/tung-sui-heng-pochana-stadium-one"}
+];
+const MICH_CUISINE_GROUPS={thai:'🇹🇭 泰式',european:'🇪🇺 歐式',chinese:'🇨🇳 中式',street:'🍜 小吃'};
+const MICH_AWARD_LABELS={'1 Star':'⭐ 一星','Bib Gourmand':'🍽 必比登','Selected Restaurants':'📋 推薦'};
+
+function michAwardBadge(award){
+  const cls=award==='1 Star'?'mich-award-star':award==='Bib Gourmand'?'mich-award-bib':'mich-award-sel';
+  const label=MICH_AWARD_LABELS[award]||award;
+  return `<span class="mich-card-award ${cls}">${label}</span>`;
+}
+function filterMichelin(){
+  const el=document.getElementById('day0');
+  if(!el)return;
+  const activeC=new Set();el.querySelectorAll('.mich-pill[data-cg].on').forEach(p=>activeC.add(p.dataset.cg));
+  const activeA=new Set();el.querySelectorAll('.mich-pill[data-award].on').forEach(p=>activeA.add(p.dataset.award));
+  const activeP=new Set();el.querySelectorAll('.mich-pill[data-price].on').forEach(p=>activeP.add(p.dataset.price));
+  const filtered=MICHELIN_DATA.filter(r=>{
+    if(activeC.size&&!activeC.has(r.cg))return false;
+    if(activeA.size&&!activeA.has(r.award))return false;
+    if(activeP.size&&!activeP.has(r.price))return false;
+    return true;
+  });
+  // Update list
+  const listEl=el.querySelector('.mich-list');
+  const countEl=el.querySelector('.mich-count');
+  if(countEl)countEl.textContent=`顯示 ${filtered.length} / ${MICHELIN_DATA.length} 間`;
+  if(listEl){
+    listEl.innerHTML=filtered.map(r=>`<div class="mich-card">
+      <div class="mich-card-head"><span class="mich-card-name">${r.name}</span>${michAwardBadge(r.award)}</div>
+      <div class="mich-card-meta"><span>${r.cuisine}</span><span>${r.price}</span><span>${r.addr}</span></div>
+      <div class="mich-card-desc">${r.desc}</div>
+      <a class="mich-card-nav" href="${mapUrl(r.name+' Bangkok')}" target="_blank" rel="noopener">📍 Google Maps</a>
+    </div>`).join('');
+  }
+  // Update map
+  const containerId='michmap';
+  if(_maps[containerId]){_maps[containerId].remove();delete _maps[containerId];}
+  initMichMap(containerId,filtered);
+}
+function initMichMap(containerId,data){
+  const el=document.getElementById(containerId);
+  if(!el||el.offsetParent===null)return;
+  const map=L.map(containerId,{scrollWheelZoom:true,dragging:true,zoomControl:true}).setView([13.742,100.540],14);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM',maxZoom:18}).addTo(map);
+  const group=[];
+  data.forEach(r=>{
+    const color=MICHELIN_AWARD_COLORS[r.award]||'#999';
+    const popup=`<b>${r.name}</b><br><span style="color:#666">${r.cuisine} · ${r.price}</span><br>${michAwardBadge(r.award)}<br><a class="map-nav-btn" href="${mapUrl(r.name+' Bangkok')}" target="_blank" rel="noopener">📍 導航</a>`;
+    L.marker([r.lat,r.lng],{icon:createMapIcon(color)}).addTo(map).bindPopup(popup);
+    group.push([r.lat,r.lng]);
+  });
+  if(group.length>1)map.fitBounds(group,{padding:[25,25]});
+  else if(group.length===1)map.setView(group[0],15);
+  // Locate button
+  const locBtn=document.createElement('button');
+  locBtn.className='map-locate-btn';locBtn.innerHTML='📍';locBtn.title='顯示我的位置';
+  el.style.position='relative';el.appendChild(locBtn);
+  let locMarker=null,locCircle=null;
+  locBtn.addEventListener('click',()=>{
+    if(!navigator.geolocation){alert('你的瀏覽器不支援定位');return;}
+    locBtn.classList.add('locating');
+    navigator.geolocation.getCurrentPosition(pos=>{
+      locBtn.classList.remove('locating');
+      const lat=pos.coords.latitude,lng=pos.coords.longitude,acc=pos.coords.accuracy;
+      if(locMarker){map.removeLayer(locMarker);map.removeLayer(locCircle);}
+      locMarker=L.marker([lat,lng],{icon:L.divIcon({className:'',html:'<div class="leaflet-loc-dot"></div>',iconSize:[14,14],iconAnchor:[7,7]})}).addTo(map).bindPopup('📍 你在這裡');
+      locCircle=L.circle([lat,lng],{radius:acc,color:'#007aff',fillColor:'#007aff',fillOpacity:.1,weight:1}).addTo(map);
+      map.setView([lat,lng],15);locMarker.openPopup();
+    },err=>{
+      locBtn.classList.remove('locating');
+      alert('定位失敗：'+(err.code===1?'請允許位置存取權限':err.code===2?'無法取得位置':'定位逾時'));
+    },{enableHighAccuracy:true,timeout:10000});
+  });
+  _maps[containerId]=map;
+}
 
 function createMapIcon(color){
   return L.divIcon({className:'',html:`<div style="width:22px;height:22px;border-radius:50%;background:${color};border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.35)"></div>`,iconSize:[22,22],iconAnchor:[11,11],popupAnchor:[0,-13]});
@@ -768,8 +882,8 @@ function render(){
       subtab.classList.add('active');
       const sec=subtab.dataset.subtab;
       dv.querySelectorAll('.tab-section').forEach(s=>s.classList.toggle('active',s.dataset.section===sec));
-      // Init dashboard map when switching to map tab
-      if(sec==='map')setTimeout(()=>initMap('dashmap',PLACES,'lg'),100);
+      // Init michelin map when switching to michelin tab
+      if(sec==='michelin')setTimeout(()=>initMichMap('michmap',MICHELIN_DATA),100);
       return;
     }
     if(e.target.closest('a'))return;
@@ -840,7 +954,7 @@ function renderDashboard(){
   html+='<div class="day-subtab" data-subtab="calc">💱 匯率</div>';
   html+='<div class="day-subtab" data-subtab="nospicy">🌶️ 不辣</div>';
   html+='<div class="day-subtab" data-subtab="translate">🔤 翻譯</div>';
-  html+='<div class="day-subtab" data-subtab="map">🗺 地圖</div>';
+  html+='<div class="day-subtab" data-subtab="michelin">🍽 米其林</div>';
   html+='</div>';
 
   // Warns
@@ -902,17 +1016,45 @@ function renderDashboard(){
   // Translate section
   html+=`<div class="tab-section" data-section="translate"><div class="dash-section" id="tr-container"></div></div>`;
 
-  // Map section
-  let mapHtml='<div class="dash-section"><h3>🗺 全行程地圖</h3>';
-  mapHtml+='<p style="font-size:12px;color:var(--text-light);margin-bottom:10px">點擊標記查看資訊，點「導航」開啟 Google Maps</p>';
-  mapHtml+='<div class="day-filter-bar" style="display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap">';
-  mapHtml+='<button class="map-day-btn active" data-mday="all" style="padding:5px 12px;border-radius:16px;border:1.5px solid var(--accent);background:var(--accent);color:#fff;font-size:12px;font-weight:600;cursor:pointer">全部</button>';
-  for(let i=1;i<=6;i++)mapHtml+=`<button class="map-day-btn" data-mday="${i}" style="padding:5px 12px;border-radius:16px;border:1.5px solid var(--accent);background:transparent;color:var(--accent);font-size:12px;font-weight:600;cursor:pointer">Day${i}</button>`;
-  mapHtml+='</div>';
-  mapHtml+='<div class="map-wrap"><div class="map-lg" id="dashmap"></div></div>';
-  mapHtml+=mapLegendHtml();
-  mapHtml+='</div>';
-  html+=`<div class="tab-section" data-section="map">${mapHtml}</div>`;
+  // Michelin section
+  let michHtml='<div class="dash-section"><h3>🍽 米其林美食地圖 · Pathum Wan</h3>';
+  michHtml+='<p style="font-size:12px;color:var(--text-light);margin-bottom:10px">2025 米其林指南｜飯店周邊步行可達</p>';
+  // Filters
+  michHtml+='<div class="mich-filters">';
+  // Cuisine
+  michHtml+='<div class="mich-filter-row"><span class="mich-filter-label">菜系</span>';
+  Object.entries(MICH_CUISINE_GROUPS).forEach(([k,v])=>{michHtml+=`<button class="mich-pill" data-cg="${k}">${v}</button>`;});
+  michHtml+='</div>';
+  // Award
+  michHtml+='<div class="mich-filter-row"><span class="mich-filter-label">星級</span>';
+  Object.entries(MICH_AWARD_LABELS).forEach(([k,v])=>{michHtml+=`<button class="mich-pill" data-award="${k}">${v}</button>`;});
+  michHtml+='</div>';
+  // Price
+  michHtml+='<div class="mich-filter-row"><span class="mich-filter-label">價位</span>';
+  ['฿','฿฿','฿฿฿'].forEach(p=>{michHtml+=`<button class="mich-pill" data-price="${p}">${p}</button>`;});
+  michHtml+='</div>';
+  michHtml+='</div>';
+  // Legend
+  michHtml+='<div class="map-legend" style="margin-bottom:8px">';
+  michHtml+='<div class="map-legend-item"><div class="map-legend-dot" style="background:#e4002b"></div>一星</div>';
+  michHtml+='<div class="map-legend-item"><div class="map-legend-dot" style="background:#ff9500"></div>必比登</div>';
+  michHtml+='<div class="map-legend-item"><div class="map-legend-dot" style="background:#5ac8fa"></div>推薦</div>';
+  michHtml+='</div>';
+  // Map
+  michHtml+='<div class="map-wrap"><div class="map-lg" id="michmap"></div></div>';
+  // Count + List
+  michHtml+=`<div class="mich-count">顯示 ${MICHELIN_DATA.length} / ${MICHELIN_DATA.length} 間</div>`;
+  michHtml+='<div class="mich-list">';
+  MICHELIN_DATA.forEach(r=>{
+    michHtml+=`<div class="mich-card">
+      <div class="mich-card-head"><span class="mich-card-name">${r.name}</span>${michAwardBadge(r.award)}</div>
+      <div class="mich-card-meta"><span>${r.cuisine}</span><span>${r.price}</span><span>${r.addr}</span></div>
+      <div class="mich-card-desc">${r.desc}</div>
+      <a class="mich-card-nav" href="${mapUrl(r.name+' Bangkok')}" target="_blank" rel="noopener">📍 Google Maps</a>
+    </div>`;
+  });
+  michHtml+='</div></div>';
+  html+=`<div class="tab-section" data-section="michelin">${michHtml}</div>`;
 
   el.innerHTML=html;
   document.getElementById('calc-thb').addEventListener('input',calcFromThb);
@@ -920,16 +1062,11 @@ function renderDashboard(){
   renderTranslateUI();
   _dashRendered=true;
 
-  // Dashboard map day filter
-  el.querySelectorAll('.map-day-btn').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      el.querySelectorAll('.map-day-btn').forEach(b=>{b.style.background='transparent';b.style.color='var(--accent)';b.classList.remove('active');});
-      btn.style.background='var(--accent)';btn.style.color='#fff';btn.classList.add('active');
-      const mday=btn.dataset.mday;
-      const containerId='dashmap';
-      if(_maps[containerId]){_maps[containerId].remove();delete _maps[containerId];}
-      const places=mday==='all'?PLACES:PLACES.filter(p=>p.day==mday);
-      initMap(containerId,places,'lg');
+  // Michelin filter pills (toggle on/off)
+  el.querySelectorAll('.mich-pill').forEach(pill=>{
+    pill.addEventListener('click',()=>{
+      pill.classList.toggle('on');
+      filterMichelin();
     });
   });
 }
