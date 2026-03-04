@@ -452,7 +452,8 @@ const MAP_COLORS={food:'#ff9500',spot:'#34c759',spa:'#5ac8fa',hotel:'#af52de',ba
 const MICHELIN_AWARD_COLORS={'1 Star':'#e4002b','Bib Gourmand':'#ff9500','Selected Restaurants':'#5ac8fa'};
 const MICH_DISTRICTS=[
   {id:'pathum_wan',label:'Pathum Wan',center:[13.742,100.540]},
-  {id:'phra_nakhon',label:'Phra Nakhon',center:[13.752,100.498]}
+  {id:'phra_nakhon',label:'Phra Nakhon',center:[13.752,100.498]},
+  {id:'bang_rak',label:'Bang Rak',center:[13.727,100.523]}
 ];
 const MICHELIN_DATA=[
   // Pathum Wan
@@ -484,9 +485,25 @@ const MICHELIN_DATA=[
   {name:"Rongros",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7460,lng:100.4920,addr:"392/16 Maha Rat Rd",desc:"河畔泰式餐廳，靠近臥佛寺",district:"phra_nakhon"},
   {name:"Supanniga Eating Room",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7461,lng:100.4921,addr:"392/25-26 Maha Rat Rd",desc:"東部泰菜名店，河景座位氣氛佳",district:"phra_nakhon"},
   {name:"Sang Thatien",cuisine:"Thai",cg:"thai",price:"฿฿฿",award:"Selected Restaurants",lat:13.7455,lng:100.4915,addr:"75 Maha Rat Rd",desc:"臥佛寺旁精緻泰菜，環境典雅",district:"phra_nakhon"},
-  {name:"Chakrabongse Dining",cuisine:"Thai",cg:"thai",price:"฿฿฿",award:"Selected Restaurants",lat:13.7452,lng:100.4910,addr:"396/1 Maha Rat Rd",desc:"河畔花園中的皇室風格泰菜",district:"phra_nakhon"}
+  {name:"Chakrabongse Dining",cuisine:"Thai",cg:"thai",price:"฿฿฿",award:"Selected Restaurants",lat:13.7452,lng:100.4910,addr:"396/1 Maha Rat Rd",desc:"河畔花園中的皇室風格泰菜",district:"phra_nakhon"},
+  // Bang Rak
+  {name:"Aksorn",cuisine:"Thai",cg:"thai",price:"฿฿฿",award:"1 Star",lat:13.7244904,lng:100.516235,addr:"Warehouse 30, 5F",desc:"David Thompson 以古泰食譜重現經典，一星泰菜",district:"bang_rak"},
+  {name:"Aunglo by Yangrak",cuisine:"Thai contemporary",cg:"thai",price:"฿฿",award:"Bib Gourmand",lat:13.7256623,lng:100.5255723,addr:"174/4-6 Surawong",desc:"必比登當代泰菜，融合傳統與創新",district:"bang_rak"},
+  {name:"Thien Duong",cuisine:"Vietnamese",cg:"vietnamese",price:"฿฿",award:"Bib Gourmand",lat:13.7270276,lng:100.5360573,addr:"Baan Dusit Thani",desc:"古典越南菜，精緻設計空間",district:"bang_rak"},
+  {name:"Samlor",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Bib Gourmand",lat:13.7302627,lng:100.5155543,addr:"1076 Charoen Krung Rd",desc:"必比登泰菜小館，招牌菜必點",district:"bang_rak"},
+  {name:"Jay Jia Yentafo",cuisine:"Noodles",cg:"street",price:"฿",award:"Selected Restaurants",lat:13.7351163,lng:100.522798,addr:"564 Rama 4 Rd",desc:"30年老店粉紅色酸辣麵，上班族排隊名店",district:"bang_rak"},
+  {name:"Charoen Saeng Silom",cuisine:"Street Food",cg:"street",price:"฿",award:"Selected Restaurants",lat:13.7228038,lng:100.516869,addr:"492/6 Soi Charoen Krung 49",desc:"滷肉飯老字號，中藥香料慢燉入味",district:"bang_rak"},
+  {name:"Si Sawat",cuisine:"Thai contemporary, Thai",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7260277,lng:100.5418771,addr:"Unit A1, Sathon",desc:"新潮泰式料理，重新詮釋傳統菜色",district:"bang_rak"},
+  {name:"100 Mahaseth",cuisine:"Isan",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7290445,lng:100.5183206,addr:"100 Mahaseth Rd",desc:"Nose-to-tail 東北菜，在地食材全利用",district:"bang_rak"},
+  {name:"Somboon Seafood",cuisine:"Thai-Chinese",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7283257,lng:100.5266804,addr:"169 Surawong Rd",desc:"咖哩螃蟹創始名店，超過 50 年歷史",district:"bang_rak"},
+  {name:"Sanyod",cuisine:"Chinese",cg:"chinese",price:"฿฿",award:"Selected Restaurants",lat:13.7187862,lng:100.5176462,addr:"89 Soi Charat Wiang",desc:"半世紀中菜老店，傳統粵式風味",district:"bang_rak"},
+  {name:"Baan Suriyasai",cuisine:"Thai",cg:"thai",price:"฿฿",award:"Selected Restaurants",lat:13.7291405,lng:100.5277687,addr:"174 Surawong Rd",desc:"百年老宅中的精緻泰菜，環境典雅",district:"bang_rak"},
+  {name:"Eat Me",cuisine:"International",cg:"european",price:"฿฿฿",award:"Selected Restaurants",lat:13.7254319,lng:100.5339247,addr:"1/6 Soi Phiphat 2",desc:"隱身巷弄的國際料理名店，氣氛獨特",district:"bang_rak"},
+  {name:"Scarlett",cuisine:"Grills",cg:"european",price:"฿฿฿",award:"Selected Restaurants",lat:13.7259802,lng:100.525907,addr:"Pullman 37F",desc:"37樓景觀燒烤餐廳，適合朋友聚會",district:"bang_rak"},
+  {name:"Giglio Trattoria Fiorentina",cuisine:"Italian",cg:"european",price:"฿฿฿",award:"Selected Restaurants",lat:13.7226449,lng:100.5259213,addr:"149 Soi Sathon 12",desc:"正宗佛羅倫斯傳統義大利菜",district:"bang_rak"},
+  {name:"Ojo",cuisine:"Mexican",cg:"european",price:"฿฿฿",award:"Selected Restaurants",lat:13.72352,lng:100.52825,addr:"Mahanakhon 76F",desc:"76樓高空墨西哥菜，絕佳城市景觀",district:"bang_rak"}
 ];
-const MICH_ALL_CUISINE_GROUPS={thai:'🇹🇭 泰式',european:'🇪🇺 歐式',chinese:'🇨🇳 中式',street:'🍜 小吃',noodles:'🍜 麵食'};
+const MICH_ALL_CUISINE_GROUPS={thai:'🇹🇭 泰式',european:'🇪🇺 歐式',chinese:'🇨🇳 中式',street:'🍜 小吃',noodles:'🍜 麵食',vietnamese:'🇻🇳 越南',seafood:'🦐 海鮮'};
 const MICH_AWARD_LABELS={'1 Star':'⭐ 一星','Bib Gourmand':'🍽 必比登','Selected Restaurants':'📋 推薦'};
 
 /* ── Michelin helpers ── */
