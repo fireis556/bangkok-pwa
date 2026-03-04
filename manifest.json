@@ -1,0 +1,14 @@
+{
+  "name": "2026 曼谷自由行",
+  "short_name": "曼谷旅行",
+  "description": "2026/07/18-23 曼谷 6 天 5 夜行程表",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#faf8f3",
+  "theme_color": "#c89b3c",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

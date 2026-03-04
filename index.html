@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#faf8f3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>🇹🇭 2026 曼谷自由行</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--accent:#c89b3c;--bg:#faf8f3;--text:#1d1d1f;--text-light:#86868b;--card-bg:#fff;--border:#e5e5ea;--shadow:0 1px 3px rgba(0,0,0,.04),0 4px 12px rgba(0,0,0,.06);--cat-transport:#5ac8fa;--cat-food:#ff9500;--cat-spot:#34c759;--cat-hotel:#af52de;--cat-default:#e5e5ea}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,"Noto Sans TC",sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.header{background:rgba(250,248,243,.92);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);color:var(--text);padding:16px 16px 12px;text-align:center;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(0,0,0,.08)}
+@supports(backdrop-filter:blur(1px)){.header{background:rgba(255,253,248,.72)}}
+.header h1{font-size:18px;font-weight:800;letter-spacing:-.2px}
+.header .sub{font-size:12px;color:var(--text-light);margin-top:3px;font-weight:500}
+.tabs{display:flex;position:sticky;top:53px;z-index:99;background:rgba(250,248,243,.92);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid rgba(0,0,0,.08);overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+@supports(backdrop-filter:blur(1px)){.tabs{background:rgba(255,253,248,.72)}}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;padding:10px 14px;font-size:13px;font-weight:600;color:var(--text-light);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;user-select:none}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab:active{background:rgba(0,0,0,.04)}
+.content{padding:12px 12px 24px;max-width:600px;margin:0 auto}
+.day-view{display:none}
+.day-view.active{display:block}
+@keyframes cardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.day-header{padding:20px 4px 12px}
+.day-header .date{font-size:20px;font-weight:800;color:var(--text);letter-spacing:-.3px}
+.day-header .dtitle{font-size:14px;color:var(--text-light);margin-top:2px;font-weight:500}
+.day-header .hotel{font-size:13px;color:var(--text-light);margin-top:4px}
+.day-header .hotel::before{content:"🏨 "}
+.day-header .warn{font-size:12px;color:#b85c00;background:#fff8ef;border-left:3px solid #f0a030;padding:6px 10px;margin-top:8px;border-radius:0 8px 8px 0;line-height:1.5}
+.timeline{position:relative;padding-left:20px}
+.timeline::before{content:"";position:absolute;left:8px;top:12px;bottom:12px;width:1.5px;background:var(--border)}
+.item{position:relative;margin-bottom:8px}
+.item::before{content:"";position:absolute;left:-17px;top:14px;width:10px;height:10px;border-radius:50%;background:var(--cat-default);border:2.5px solid #fff;box-shadow:0 0 0 2px var(--cat-default);z-index:1}
+.item[data-cat="transport"]::before{background:var(--cat-transport);box-shadow:0 0 0 2px var(--cat-transport)}
+.item[data-cat="food"]::before{background:var(--cat-food);box-shadow:0 0 0 2px var(--cat-food)}
+.item[data-cat="spot"]::before{background:var(--cat-spot);box-shadow:0 0 0 2px var(--cat-spot)}
+.item[data-cat="hotel"]::before{background:var(--cat-hotel);box-shadow:0 0 0 2px var(--cat-hotel)}
+.card{position:relative;background:var(--card-bg);border-radius:16px;padding:12px 14px;box-shadow:var(--shadow);transition:transform .15s,opacity .15s;animation:cardIn .35s ease both}
+.card:active{transform:scale(.97);opacity:.85}
+.card-transport{background:linear-gradient(135deg,rgba(90,200,250,.06),rgba(90,200,250,.12));border:1px solid rgba(90,200,250,.15)}
+.card-food{background:linear-gradient(135deg,rgba(255,149,0,.06),rgba(255,149,0,.12));border:1px solid rgba(255,149,0,.15)}
+.card-spot{background:linear-gradient(135deg,rgba(52,199,89,.06),rgba(52,199,89,.12));border:1px solid rgba(52,199,89,.15)}
+.card-hotel{background:linear-gradient(135deg,rgba(175,82,222,.06),rgba(175,82,222,.12));border:1px solid rgba(175,82,222,.15)}
+.card-header{display:flex;align-items:flex-start;gap:10px;margin-top:4px}
+.card-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.card-transport .card-icon{background:rgba(90,200,250,.15)}
+.card-food .card-icon{background:rgba(255,149,0,.15)}
+.card-spot .card-icon{background:rgba(52,199,89,.15)}
+.card-hotel .card-icon{background:rgba(175,82,222,.15)}
+.card-body{flex:1;min-width:0}
+.card-shop{font-size:15px;font-weight:700;color:var(--text);line-height:1.3}
+.card-desc{font-size:12px;color:var(--text-light);margin-top:2px;line-height:1.4}
+.route{display:flex;align-items:center;gap:8px;margin:8px 0 4px;padding:4px 0}
+.route-from,.route-to{font-size:12px;font-weight:700;color:var(--text);white-space:nowrap}
+.route-line{flex:1;height:2px;background:linear-gradient(90deg,var(--cat-transport),rgba(90,200,250,.3),var(--cat-transport));position:relative;border-radius:1px;min-width:20px}
+.route-line::before{content:"";position:absolute;left:-4px;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--cat-transport)}
+.route-line::after{content:"";position:absolute;right:-4px;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--cat-transport)}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;line-height:1.5}
+.card-transport .tag{background:rgba(90,200,250,.12);color:#0077b6}
+.card-food .tag{background:rgba(255,149,0,.12);color:#b36b00}
+.card-spot .tag{background:rgba(52,199,89,.12);color:#1b7a34}
+.card-hotel .tag{background:rgba(175,82,222,.12);color:#7b2d8e}
+.tag-default{background:var(--bg);color:var(--text-light)}
+.item:nth-child(1) .card{animation-delay:0ms}.item:nth-child(2) .card{animation-delay:30ms}.item:nth-child(3) .card{animation-delay:60ms}.item:nth-child(4) .card{animation-delay:90ms}.item:nth-child(5) .card{animation-delay:120ms}.item:nth-child(6) .card{animation-delay:150ms}.item:nth-child(7) .card{animation-delay:180ms}.item:nth-child(8) .card{animation-delay:210ms}.item:nth-child(9) .card{animation-delay:240ms}.item:nth-child(10) .card{animation-delay:270ms}.item:nth-child(11) .card{animation-delay:300ms}.item:nth-child(12) .card{animation-delay:330ms}
+.card .time{font-size:11px;color:var(--text-light);font-weight:700;letter-spacing:.3px}
+.card .activity{font-size:14px;font-weight:600;margin:4px 0 2px;line-height:1.4}
+.card .activity a{color:var(--text);text-decoration:none;border-bottom:1px dashed var(--accent)}
+.card .notes{font-size:11.5px;color:var(--text-light);line-height:1.5;margin-top:4px}
+.card .notes .warn-text{color:#b85c00}
+.card.has-map{display:flex;align-items:center;overflow:hidden;padding-right:10px}
+.card-main{flex:1;min-width:0}
+.card-map-btn{display:flex;align-items:center;justify-content:center;width:40px;height:40px;flex-shrink:0;margin-left:6px;border-radius:10px;background:rgba(200,155,60,.06);border:1.5px solid rgba(200,155,60,.12);text-decoration:none;transition:all .15s;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.card-map-btn svg{width:22px;height:22px;opacity:.5}
+.card-map-btn:active{background:rgba(200,155,60,.13);border-color:rgba(200,155,60,.28);box-shadow:0 1px 4px rgba(200,155,60,.15)}
+.card-map-btn:active svg{opacity:.85}
+.card.has-map .badge{right:52px}
+.card-expandable{cursor:pointer}
+.card-chevron{display:block;text-align:center;font-size:10px;color:var(--text-light);margin-top:4px;transition:transform .3s ease;line-height:1;opacity:.35}
+.card.expanded .card-chevron{transform:rotate(180deg);opacity:.6}
+.card-detail{max-height:0;overflow:hidden;opacity:0;transition:max-height .35s cubic-bezier(.4,0,.2,1),opacity .25s ease .05s}
+.card.expanded .card-detail{max-height:600px;opacity:1}
+.detail-divider{border:none;height:1px;margin:10px 0 8px;background:linear-gradient(90deg,var(--cat-food),transparent)}
+.card-spot .detail-divider{background:linear-gradient(90deg,var(--cat-spot),transparent)}
+.detail-hours{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px;background:rgba(0,0,0,.04);color:var(--text);margin-bottom:8px}
+.detail-menu-title{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;color:var(--text-light);margin:8px 0 6px}
+.detail-menu-title::after{content:"";flex:1;height:1px;background:var(--border)}
+.detail-notes{font-size:11.5px;color:var(--text-light);line-height:1.5;margin-top:6px}
+.detail-notes .warn-text{color:#b85c00}
+.detail-photos{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:10px 0;margin-top:10px;border-radius:12px;background:linear-gradient(135deg,rgba(255,149,0,.08),rgba(255,149,0,.15));color:#b36b00;font-size:12px;font-weight:600;text-decoration:none;transition:background .15s}
+.detail-photos:active{background:rgba(255,149,0,.22)}
+.day-subtabs{display:flex;gap:0;background:var(--bg);border-radius:12px;padding:3px;border:1px solid var(--border);margin-bottom:12px}
+.day-subtab{flex:1;text-align:center;padding:8px 0;font-size:13px;font-weight:600;color:var(--text-light);border-radius:10px;cursor:pointer;transition:all .2s;user-select:none}
+.day-subtab.active{background:#fff;color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.day-subtab:active{opacity:.7}
+.tab-section{display:none}
+.tab-section.active{display:block}
+.meal-group{margin-bottom:20px}
+.meal-group-label{font-size:12px;font-weight:700;color:var(--text-light);letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.meal-group-label::after{content:"";flex:1;height:1px;background:var(--border)}
+.rest-card{position:relative;background:linear-gradient(135deg,rgba(255,149,0,.06),rgba(255,149,0,.12));border:1px solid rgba(255,149,0,.15);border-radius:16px;padding:12px 14px;margin-bottom:8px;box-shadow:var(--shadow);animation:cardIn .35s ease both}
+.rest-card.has-map{display:flex;align-items:center;overflow:hidden;padding-right:10px}
+.rest-card-main{flex:1;min-width:0}
+.rest-name{font-size:16px;font-weight:700;color:var(--text);line-height:1.3}
+.rest-oneliner{font-size:13px;color:var(--text-light);margin-top:2px;line-height:1.4}
+.rest-meta{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.rest-tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;line-height:1.5;background:rgba(255,149,0,.12);color:#b36b00}
+.rest-bottom{display:flex;align-items:center;gap:12px;margin-top:8px;font-size:11.5px;color:var(--text-light)}
+.rest-hours{display:inline-flex;align-items:center;gap:3px}
+.rest-price{display:inline-flex;align-items:center;gap:3px;font-weight:600;color:#b36b00}
+.rest-warn{font-size:11px;color:#b85c00;margin-top:6px}
+.rest-nospicy{font-size:11px;color:#1b7a34;margin-top:4px;background:rgba(52,199,89,.08);padding:4px 8px;border-radius:8px;line-height:1.5}
+.meal-empty{padding:20px 16px;text-align:center;font-size:13px;color:var(--text-light);border:1.5px dashed var(--border);border-radius:16px;margin-bottom:8px}
+.snack-section .rest-card{padding:10px 12px}
+.snack-section .rest-name{font-size:14px}
+.snack-section .rest-oneliner{font-size:12px}
+.rest-card .badge{position:absolute;top:6px;right:8px;background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;cursor:pointer}
+.rest-card.has-map .badge{right:52px}
+.rest-card.has-alts{cursor:pointer}
+.card.compact{padding:8px 14px}
+.card.compact .activity{font-size:12px;font-weight:500;color:var(--text-light)}
+.budget{background:var(--card-bg);border-radius:16px;padding:14px 16px;margin-top:16px;box-shadow:var(--shadow)}
+.budget h3{font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px}
+.budget table{width:100%;font-size:12px;border-collapse:collapse}
+.budget td{padding:4px 0}
+.budget td:last-child{text-align:right;font-family:'SF Mono',Menlo,'Courier New',monospace;font-size:11.5px;white-space:nowrap}
+.budget tr.total td{border-top:1.5px dashed var(--border);padding-top:8px;font-weight:700;color:var(--accent)}
+.badge{position:absolute;top:6px;right:8px;background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;cursor:pointer}
+.card.has-alts{cursor:pointer}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:200;opacity:0;transition:opacity .25s}
+.overlay.show{opacity:1}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:201;background:#fff;border-radius:16px 16px 0 0;max-height:70vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .25s ease-out;box-shadow:0 -4px 20px rgba(0,0,0,.1)}
+.sheet.show{transform:translateY(0)}
+.sheet-handle{width:36px;height:4px;background:#d1d1d6;border-radius:2px;margin:10px auto 0}
+.sheet-head{display:flex;align-items:center;padding:12px 16px 8px;border-bottom:1px solid var(--border)}
+.sheet-title{flex:1;font-size:14px;font-weight:700;color:var(--text)}
+.sheet-close{width:28px;height:28px;border:none;background:var(--bg);border-radius:50%;font-size:16px;color:var(--text-light);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
+.sheet-close:active{background:#d1d1d6}
+.sheet-body{overflow-y:auto;padding:12px 16px 24px;-webkit-overflow-scrolling:touch}
+.sheet-body .rest-card{box-shadow:none;background:linear-gradient(135deg,rgba(255,149,0,.04),rgba(255,149,0,.08))}
+.alt-card{background:var(--bg);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.alt-card:last-child{margin-bottom:0}
+.alt-name{font-size:14px;font-weight:700;color:var(--text)}
+.alt-feat{font-size:12px;color:var(--accent);margin-top:2px}
+.alt-detail{font-size:11px;color:var(--text-light);margin-top:6px;line-height:1.6}
+.alt-detail span{display:block}
+.alt-warn{font-size:11px;color:#b85c00;margin-top:4px}
+.alt-map{display:inline-flex;align-items:center;gap:3px;font-size:11px;color:var(--accent);margin-top:6px;text-decoration:none;padding:3px 8px;background:#fff;border-radius:20px;font-weight:500}
+.dash-section{background:var(--card-bg);border-radius:16px;padding:14px 16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.dash-section h3{font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px}
+.dash-warn{font-size:12px;color:#b85c00;background:#fff8ef;border-left:3px solid #f0a030;padding:6px 10px;margin-bottom:6px;border-radius:0 8px 8px 0;line-height:1.5}
+.dash-warn:last-child{margin-bottom:0}
+.dash-table{width:100%;font-size:12px;border-collapse:collapse}
+.dash-table td{padding:4px 0}
+.dash-table td:last-child{text-align:right;font-family:'SF Mono',Menlo,'Courier New',monospace;font-size:11.5px;white-space:nowrap}
+.dash-table tr.total td{border-top:1.5px dashed var(--border);padding-top:8px;font-weight:700;color:var(--accent)}
+.calc-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.calc-label{font-size:14px;font-weight:700;width:36px;text-align:right}
+.calc-input{flex:1;border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;font-size:16px;font-family:'SF Mono',Menlo,'Courier New',monospace;outline:none;transition:border-color .2s;-webkit-appearance:none;background:#fff}
+.calc-input:focus{border-color:var(--accent)}
+.calc-arrow{text-align:center;font-size:16px;color:var(--accent);margin:-4px 0 -4px 44px}
+.rate-status{font-size:11px;color:var(--text-light);margin-top:8px;display:flex;align-items:center;gap:4px}
+.rate-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.rate-dot.online{background:#34c759}
+.rate-dot.cached{background:#ff9500}
+.rate-dot.fallback{background:#d1d1d6}
+/* No-spicy guide */
+.nospicy-phrase{background:linear-gradient(135deg,rgba(200,155,60,.06),rgba(200,155,60,.12));border:1px solid rgba(200,155,60,.15);border-radius:14px;padding:12px 14px;margin-bottom:8px}
+.nospicy-thai{font-size:18px;font-weight:700;color:var(--text);line-height:1.4}
+.nospicy-row{display:flex;justify-content:space-between;align-items:baseline;margin-top:4px}
+.nospicy-cn{font-size:13px;color:var(--text-light)}
+.nospicy-en{font-size:11px;color:var(--accent);font-weight:600}
+.nospicy-foods{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.nospicy-food{background:rgba(52,199,89,.06);border:1px solid rgba(52,199,89,.12);border-radius:10px;padding:8px 10px;font-size:12px;font-weight:600;color:#1b7a34;text-align:center}
+.footer{text-align:center;padding:20px;font-size:11px;color:var(--text-light)}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🇹🇭 2026 曼谷自由行</h1>
+  <div class="sub">07/18（六）— 07/23（四）｜5泊6日｜5人</div>
+</div>
+
+<div class="tabs" id="tabs"></div>
+<div class="content" id="content"></div>
+<div class="footer">離線可用 · 可安裝至桌面 · 點擊地點開啟 Google Maps</div>
+
+<script>
+const GLOBAL_WARNS = [
+  "護照效期需 6 個月以上",
+  "七月為雨季，午後常有雷陣雨，隨身帶雨具",
+  "必載 App：Grab（叫車）、Google Maps、LINE",
+  "BTS 可購 Rabbit Card｜MRT 買單程票即可",
+  "不吃辣通用句：ไม่เผ็ดนะครับ/ค่ะ（不要辣）"
+];
+const FALLBACK_RATE = 0.92;
+
+const DAYS = [
+  {
+    day:1, date:"07/18（六）", title:"抵達＋海鮮吃到飽",
+    hotel:"Grande Centre Point Prestige Bangkok",
+    warns:["飯店入住 14:00｜建議 Klook 先買 Goji 含訂位"],
+    items:[
+      {t:"12:00~14:40",a:"✈ 抵達 BKK＋入境＋前往飯店",n:"ARL 到 Phaya Thai 約 40 分＋BTS 轉乘｜加 buffer 共約 90 分",m:"Grande Centre Point Prestige Bangkok",from:"BKK 機場",to:"Prestige 飯店",dur:"約60~90分",tags:["ARL+BTS"]},
+      {t:"14:40~16:10",a:"🏨 入住＋短休息補血",n:"標準入住 14:00｜先處理時差"},
+      {t:"16:10~16:30",a:"🚃 BTS 前往 Asok",n:"站間約 20 分",from:"Ratchadamri",to:"Asok",dur:"約20分",tags:["฿30~65/人"]},
+      {t:"16:30~17:30",a:"💆 Let's Relax 足底按摩",hours:"10:00~00:00",n:"足底 60 分 ฿800/人｜建議預約｜週末傍晚容易滿",m:"Let's Relax Spa Sukhumvit 14 Bangkok"},
+      {t:"17:30~18:00",a:"🚃 BTS 前往 Phrom Phong",from:"Asok",to:"Phrom Phong",dur:"約15分",tags:["฿17~65/人"]},
+      {t:"18:00~19:15",a:"🛍 EMSPHERE 逛街",hours:"10:00~22:00",n:"Sukhumvit 新一代大型商場",m:"EMSPHERE Bangkok"},
+      {t:"19:15~19:45",a:"🚕 Grab 前往海鮮吃到飽",n:"週六晚高峰｜短程",from:"Phrom Phong",to:"Sukhumvit 22",dur:"約15~30分",tags:["฿80~180/車"]},
+      {t:"19:45~21:45",a:"🍽 高級海鮮吃到飽",meal:"夜",shop:"Goji Kitchen + Bar",type:"海鮮自助",station:"Sukhumvit 22",oneliner:"Marriott 海鮮自助，牡蠣/冰上海鮮/壽司刺身站",hours:"17:30~22:00",price:"฿2,599++/人（週末）",n:"Klook 先買含訂位｜不辣友善：海鮮冰台、烤物、日式站都能避辣",m:"Goji Kitchen + Bar Bangkok",nospicy:"海鮮冰台/烤物/壽司刺身/牛排/甜點"},
+      {t:"22:10~23:10",a:"🌃 Octave Rooftop 夜景",meal:"小吃",shop:"Octave Rooftop Lounge & Bar",type:"屋頂酒吧",station:"Sukhumvit",oneliner:"高空夜景＋雞尾酒",hours:"17:00~02:00",price:"฿300~500/人",n:"建議訂位",m:"Octave Rooftop Lounge Bar Bangkok"},
+      {t:"23:10~00:00",a:"🚕 Grab 回飯店",n:"保守 25~50 分",from:"Sukhumvit",to:"Prestige",dur:"約25~50分",tags:["฿160~350/車"]}
+    ],
+    budget:[
+      ["交通 ARL+BTS ×5","~฿1,000"],
+      ["按摩 Let's Relax ×5","฿4,000"],
+      ["Goji 海鮮吃到飽 ×5","~฿15,300"],
+      ["Octave 飲品 ×5","~฿2,500"],
+      ["Grab（全日）","~฿1,500"],
+      ["合計","~฿24,300"]
+    ]
+  },
+  {
+    day:2, date:"07/19（日）", title:"洽圖洽市集＋夜市",
+    hotel:"Grande Centre Point Prestige Bangkok",
+    warns:["洽圖洽超大超曬，帽子/輕便鞋/水必備"],
+    items:[
+      {t:"08:30~09:10",a:"🚃 BTS/MRT 前往 Chatuchak",n:"保守 30~50 分",from:"Prestige",to:"Chatuchak",dur:"約30~50分",tags:["฿30~110/人"]},
+      {t:"09:10~12:30",a:"🛍 洽圖洽週末市集",hours:"週末 09:00~18:00",n:"200 分鐘｜超過 8,000 攤位｜注意補水",m:"Chatuchak Weekend Market Bangkok"},
+      {t:"12:30~13:30",a:"🍽 Or Tor Kor Market 午餐",meal:"昼",shop:"Or Tor Kor Market",type:"生鮮市場",station:"Chatuchak",oneliner:"乾淨舒適的生鮮市場，海鮮、水果、即食美食",hours:"06:00~18:00",price:"~฿200/人",n:"",m:"Or Tor Kor Market Bangkok",nospicy:"烤雞/沙嗲（醬分開）、清湯麵/粥、芒果糯米飯、水果拼盤"},
+      {t:"13:30~15:00",a:"🚃 回飯店午休",n:"不休息晚上會壞掉",from:"Chatuchak",to:"Prestige",dur:"約35~60分",tags:["฿30~110/人"]},
+      {t:"15:00~16:00",a:"🚇 MRT 前往 Ratchada",n:"同區一次解決",from:"Prestige",to:"Thailand Cultural Centre",dur:"約30~60分",tags:["฿25~60/人"]},
+      {t:"16:00~17:00",a:"💆 Let's Relax 足底按摩",hours:"10:00~00:00",n:"MRT Exit 4 步行 350m｜足底 60 分 ฿800/人｜建議預約",m:"Let's Relax Spa The Street Ratchada Bangkok"},
+      {t:"17:10~20:30",a:"🛍 JODD FAIRS 夜市＋晚餐",meal:"夜",shop:"JODD FAIRS Ratchada",type:"夜市",station:"Ratchada",oneliner:"曼谷人氣夜市，烤海鮮/甜點/椰子冰",hours:"每日 17:00~01:00",price:"~฿300/人",n:"同區步行 10~20 分",m:"JODD FAIRS Ratchada Bangkok",nospicy:"烤海鮮/烤肉（醬另外放）、烤玉米、香蕉煎餅、椰子冰",alts:[
+        {name:"CentralWorld 美食街",type:"商場美食",station:"Chit Lom",oneliner:"室內 Plan B（暴雨備案）",hours:"10:00~22:00",price:"~฿300/人",warn:"暴雨時的替代方案",map:"CentralWorld Bangkok"}
+      ]},
+      {t:"20:30~21:30",a:"🚇 MRT/Grab 回飯店",n:"保守 35~70 分",from:"Ratchada",to:"Prestige",dur:"約35~70分",tags:["MRT/Grab"]}
+    ],
+    budget:[
+      ["BTS/MRT 交通 ×5","~฿1,000"],
+      ["Or Tor Kor 午餐 ×5","~฿1,000"],
+      ["按摩 Let's Relax ×5","฿4,000"],
+      ["JODD FAIRS 晚餐 ×5","~฿1,500"],
+      ["洽圖洽購物","自理"],
+      ["合計","~฿7,500+購物"]
+    ]
+  },
+  {
+    day:3, date:"07/20（一）", title:"換飯店＋商圈＋One Bangkok",
+    hotel:"Kimpton Maa-Lai Bangkok",
+    warns:["住宿轉換日｜Prestige 退房 12:00 → Kimpton 入住 15:00"],
+    items:[
+      {t:"09:30~11:00",a:"🏨 退房準備＋寄放行李",n:"Prestige 退房 12:00｜先整理行李"},
+      {t:"11:00~11:30",a:"🚕 Grab 換飯店",n:"超近但拖行李別走路",m:"Kimpton Maa-Lai Bangkok",from:"Prestige",to:"Kimpton",dur:"約15~25分",tags:["฿80~180/車"]},
+      {t:"11:30~12:00",a:"🏨 Kimpton 寄放行李",n:"入住 15:00｜先寄放"},
+      {t:"12:00~13:15",a:"🍽 Eathai 午餐",meal:"昼",shop:"Eathai",type:"美食廣場",station:"Central Embassy",oneliner:"高質感泰式美食廣場，冷氣舒適新手友善",hours:"10:00~22:00",price:"~฿300/人",n:"",m:"Eathai Central Embassy Bangkok",nospicy:"清湯麵/粥、海南雞飯、炒河粉（不辣）、甜點水果"},
+      {t:"13:15~14:30",a:"🛍 Central Embassy 逛街",hours:"10:00~22:00",n:"大型商場",m:"Central Embassy Bangkok"},
+      {t:"14:30~15:30",a:"🏨 回 Kimpton 入住",n:"入住 15:00"},
+      {t:"16:00~17:00",a:"💆 Let's Relax CentralWorld 按摩",hours:"10:00~00:00",n:"Chit Lom Exit 6 步行 450m｜足底 60 分 ฿800/人",m:"Let's Relax Spa CentralWorld Bangkok"},
+      {t:"17:15~18:45",a:"🍽 Somboon Seafood 晚餐",meal:"夜",shop:"Somboon Seafood",type:"海鮮餐廳",station:"Central Embassy",oneliner:"曼谷咖哩蟹名店，可點不辣菜色",hours:"11:00~22:00",price:"~฿800/人",n:"建議訂位｜訂位保留 15 分鐘",m:"Somboon Seafood Central Embassy Bangkok",nospicy:"蒸魚/清炒蔬菜、蛋炒飯、清湯類",alts:[
+        {name:"Eathai（同區替代）",type:"美食廣場",station:"Central Embassy",oneliner:"怕踩雷回 Eathai 吃清湯麵/粥",hours:"10:00~22:00",price:"~฿300/人",warn:"同區 Plan B",map:"Eathai Central Embassy Bangkok"}
+      ]},
+      {t:"19:00~21:15",a:"🛍 One Bangkok 夜逛＋水舞",hours:"10:00~22:00",n:"2024/10 開幕新熱點｜水舞 18:30/19:30/20:30（每場 20 分）",m:"One Bangkok"}
+    ],
+    budget:[
+      ["Grab 換飯店","~฿200"],
+      ["Eathai 午餐 ×5","~฿1,500"],
+      ["按摩 Let's Relax ×5","฿4,000"],
+      ["Somboon 晚餐 ×5","~฿4,000"],
+      ["BTS/MRT 交通 ×5","~฿750"],
+      ["合計","~฿10,450"]
+    ]
+  },
+  {
+    day:4, date:"07/21（二）", title:"古城河岸＋河畔夜市",
+    hotel:"Kimpton Maa-Lai Bangkok（續住）",
+    warns:["古城區步行多且熱，注意防曬補水｜寺廟服裝規範需遵守"],
+    items:[
+      {t:"08:00~08:50",a:"🚕 Grab 前往老城區",n:"早高峰保守 40~70 分",from:"Kimpton",to:"大皇宮",dur:"約40~70分",tags:["฿200~450/車"]},
+      {t:"09:00~11:15",a:"🏛 大皇宮＋玉佛寺",hours:"每日 08:30~16:30",n:"售票至 15:30｜門票 ฿500/人｜服裝規範注意",m:"The Grand Palace Bangkok"},
+      {t:"11:15~12:00",a:"🏛 臥佛寺（Wat Pho）",hours:"08:00~19:30",n:"步行 10~20 分到｜門票 ฿300/人",m:"Wat Pho Bangkok"},
+      {t:"12:00~13:00",a:"💆 臥佛寺泰式按摩",hours:"依現場",n:"泰式 60 分 ฿520/人｜現場排隊",m:"Wat Pho Thai Traditional Massage"},
+      {t:"13:10~14:10",a:"🏛 鄭王廟（Wat Arun）",hours:"08:00~18:00",n:"渡輪 ฿5/人 約 5 分鐘｜門票 ฿200/人",m:"Wat Arun Bangkok",from:"Tha Tien",to:"Wat Arun",dur:"渡輪約5分",tags:["฿5/人"]},
+      {t:"14:30~17:30",a:"🛍 ICONSIAM 逛街＋晚午餐",meal:"昼",shop:"ICONSIAM 美食區",type:"商場美食",station:"河畔",oneliner:"河畔大型商場，室內避雨好逛好買",hours:"10:00~22:00",price:"~฿400/人",n:"觀光船日票 ฿150/人 方便跳站",m:"ICONSIAM Bangkok",nospicy:"烤海鮮/日式/西式，避免咖哩類"},
+      {t:"18:00~22:00",a:"🛍 Asiatique 河畔夜市",meal:"夜",shop:"Asiatique The Riverfront",type:"河畔夜市",station:"河畔",oneliner:"河畔夜市＋散步拍照",hours:"11:00~00:00",price:"~฿300/人",n:"Plan B（暴雨）：回 ICONSIAM 室內",m:"Asiatique The Riverfront Bangkok",nospicy:"烤海鮮、炸物、甜點、水果",alts:[
+        {name:"ICONSIAM（暴雨備案）",type:"商場",station:"河畔",oneliner:"暴雨時回 ICONSIAM 室內逛到關門",hours:"10:00~22:00",price:"自由",warn:"雨季 Plan B",map:"ICONSIAM Bangkok"}
+      ]}
+    ],
+    budget:[
+      ["Grab 到老城區","~฿400"],
+      ["大皇宮 ×5","฿2,500"],
+      ["臥佛寺 ×5","฿1,500"],
+      ["鄭王廟 ×5","฿1,000"],
+      ["按摩 Wat Pho ×5","฿2,600"],
+      ["渡輪＋觀光船日票 ×5","~฿850"],
+      ["ICONSIAM 午餐 ×5","~฿2,000"],
+      ["Asiatique 晚餐 ×5","~฿1,500"],
+      ["合計","~฿12,350"]
+    ]
+  },
+  {
+    day:5, date:"07/22（三）", title:"高空夜景＋唐人街",
+    hotel:"Kimpton Maa-Lai Bangkok（續住）",
+    warns:["SkyWalk 建議線上買票避排隊｜遇風雨戶外區可能關閉（不退票可 reissue）"],
+    items:[
+      {t:"10:00~11:00",a:"💆 Let's Relax 足底按摩",hours:"10:00~00:00",n:"行程後段腿保養｜足底 60 分 ฿800/人",m:"Let's Relax Spa Sukhumvit 14 Bangkok"},
+      {t:"11:15~12:15",a:"🍽 Terminal 21 午餐",meal:"昼",shop:"Terminal 21 美食區",type:"商場美食",station:"Asok",oneliner:"機場主題商場，美食區選擇多",hours:"10:00~22:00",price:"~฿200/人",n:"BTS+步行 10~25 分",m:"Terminal 21 Asok Bangkok",nospicy:"日式丼飯、海南雞、清湯麵、烤雞"},
+      {t:"12:30~15:30",a:"🏨 回飯店午休/咖啡廳",n:"下午彈性時段｜室內備案"},
+      {t:"15:30~16:15",a:"🚃 BTS/Grab 前往 SkyWalk",n:"保守 25~50 分",from:"Kimpton",to:"Chong Nonsi",dur:"約25~50分",tags:["BTS/Grab"]},
+      {t:"16:15~18:30",a:"🌃 King Power Mahanakhon SkyWalk",hours:"10:00~19:00（最後入場 18:30）",n:"高空觀景台＋透明玻璃步道｜門票約 ฿880~1,200/人",m:"King Power Mahanakhon Bangkok"},
+      {t:"19:15~22:00",a:"🍽 唐人街散步＋晚餐",meal:"夜",shop:"耀華力路（Yaowarat）",type:"街區美食",station:"唐人街",oneliner:"曼谷唐人街夜間美食巡禮",hours:"入夜後最熱鬧",price:"~฿300/人",n:"Grab/MRT 25~60 分",m:"Yaowarat Road Bangkok Chinatown",nospicy:"雲吞麵/燒臘、烤海鮮醬分開、甜湯",alts:[
+        {name:"One Bangkok / Central Embassy",type:"商場",station:"市中心",oneliner:"暴雨 Plan B：室內晚餐與甜點",hours:"10:00~22:00",price:"自由",warn:"雨季備案",map:"One Bangkok"}
+      ]}
+    ],
+    budget:[
+      ["按摩 Let's Relax ×5","฿4,000"],
+      ["Terminal 21 午餐 ×5","~฿1,000"],
+      ["SkyWalk 門票 ×5","~฿5,000"],
+      ["唐人街晚餐 ×5","~฿1,500"],
+      ["交通 BTS/MRT/Grab","~฿2,000"],
+      ["合計","~฿13,500"]
+    ]
+  },
+  {
+    day:6, date:"07/23（四）", title:"返程日",
+    hotel:"",
+    warns:[],
+    items:[
+      {t:"08:00~09:00",a:"🍽 飯店早餐＋最後整理",meal:"朝",shop:"Kimpton 飯店早餐",type:"飯店",station:"Kimpton",oneliner:"飯店內用早餐",hours:"",price:"含住宿",n:""},
+      {t:"09:00~10:30",a:"🚕 退房＋Grab 前往 BKK",n:"退房 12:00 但建議早走｜保守 60~90 分含塞車",m:"Suvarnabhumi Airport",from:"Kimpton",to:"BKK 機場",dur:"約60~90分",tags:["฿500~900/車"]},
+      {t:"10:30~11:10",a:"💆 機場候機按摩（可選）",hours:"依現場",n:"BKK 機場內 Sensib Thai Massage｜30~40 分｜費用依現場",m:"Suvarnabhumi Airport"},
+      {t:"11:10~13:00",a:"✈ 報到＋安檢＋登機",meal:"昼",shop:"機場餐廳",type:"機場",station:"BKK",oneliner:"選日式/西式簡餐，直說 No chili",hours:"",price:"~฿300/人",n:"110 分緩衝時間"}
+    ],
+    budget:[
+      ["Grab 到機場","~฿800"],
+      ["機場按摩 ×5（可選）","~฿2,500"],
+      ["機場午餐 ×5","~฿1,500"],
+      ["合計","~฿4,800"]
+    ]
+  }
+];
+
+function mapUrl(q){return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`}
+function getCat(a){
+  if(/[✈🚃🚇🚌🚡🚕🚢🚶🚻]/u.test(a))return 'transport';
+  if(/[🍽🍛🍖🍣🍰🍦🍳🛒🌽🍥🍨🍹🍵☕]/u.test(a))return 'food';
+  if(/[📸🏛🎵🌸🌷🌃🎆♨📝🛍💆]/u.test(a))return 'spot';
+  if(/[🏨🛁]/u.test(a))return 'hotel';
+  return '';
+}
+function extractEmoji(s){const m=s.match(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/u);return m?m[0]:''}
+function renderTags(tags){if(!tags||!tags.length)return '';return '<div class="tags">'+tags.map(t=>`<span class="tag">${t}</span>`).join('')+'</div>'}
+function warnN(n){return n?`<div class="notes">${n.replace(/⚠️/g,'<span class="warn-text">⚠️</span>')}</div>`:''}
+function detailN(n){return n?`<div class="detail-notes">${n.replace(/⚠️/g,'<span class="warn-text">⚠️</span>')}</div>`:''}
+function renderFoodDetail(it){
+  let h='<div class="card-detail"><hr class="detail-divider">';
+  if(it.hours)h+=`<div class="detail-hours">🕐 ${it.hours}</div>`;
+  if(it.tags&&it.tags.length)h+=renderTags(it.tags);
+  h+=detailN(it.n);
+  if(it.m)h+=`<a class="detail-photos" href="${mapUrl(it.m)}" target="_blank" rel="noopener">📷 Google Maps 查看 →</a>`;
+  return h+'</div>';
+}
+function renderSpotDetail(it){
+  let h='<div class="card-detail"><hr class="detail-divider">';
+  if(it.hours)h+=`<div class="detail-hours">🕐 ${it.hours}</div>`;
+  if(it.tags&&it.tags.length)h+=renderTags(it.tags);
+  h+=detailN(it.n);
+  return h+'</div>';
+}
+function mainOpen(m){return m?'<div class="card-main">':''}
+function mainClose(m){return m?'</div>':''}
+function mapBtn(m){return m?`<a class="card-map-btn" href="${mapUrl(m)}" target="_blank" rel="noopener" aria-label="Google Maps"><svg viewBox="0 0 24 24" fill="none" stroke="#c89b3c" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><ellipse cx="12" cy="12" rx="4" ry="9.5"/><path d="M3.5 8.5h17M3.5 15.5h17"/></svg></a>`:''}
+function cardOpen(cls,it,dayNum,idx){const ha=it.alts&&it.alts.length>0;const hm=!!it.m;return `<div class="card ${cls}${it.c?' compact':''}${ha?' has-alts':''}${hm?' has-map':''}"${ha?` data-day="${dayNum}" data-idx="${idx}"`:''}>` + (ha?`<div class="badge">+${it.alts.length}</div>`:'')}
+
+function renderTransportRoute(it,dayNum,idx){
+  let h=cardOpen('card-transport',it,dayNum,idx)+mainOpen(it.m);
+  h+=`<div class="time">${it.t}</div>`;
+  h+=`<div class="activity">${it.a}</div>`;
+  h+=`<div class="route"><span class="route-from">${it.from}</span><span class="route-line"></span><span class="route-to">${it.to}</span></div>`;
+  const allTags=[it.dur,...(it.tags||[])];
+  h+=renderTags(allTags);
+  h+=warnN(it.n)+mainClose(it.m)+mapBtn(it.m)+`</div>`;
+  return h;
+}
+function renderTransportSimple(it,dayNum,idx){
+  let h=cardOpen('card-transport',it,dayNum,idx)+mainOpen(it.m);
+  h+=`<div class="time">${it.t}</div><div class="activity">${it.a}</div>`;
+  h+=warnN(it.n)+renderTags(it.tags)+mainClose(it.m)+mapBtn(it.m)+`</div>`;
+  return h;
+}
+function renderFoodCard(it,dayNum,idx){
+  const e=extractEmoji(it.a);
+  let h=cardOpen('card-food card-expandable',it,dayNum,idx)+mainOpen(it.m);
+  h+=`<div class="time">${it.t}</div>`;
+  h+=`<div class="card-header">`;
+  if(e)h+=`<div class="card-icon">${e}</div>`;
+  h+=`<div class="card-body"><div class="card-shop">${it.shop}</div>`;
+  if(it.desc||it.oneliner)h+=`<div class="card-desc">${it.desc||it.oneliner}</div>`;
+  h+=`</div></div>`;
+  h+=`<div class="card-chevron">▾</div>`;
+  h+=renderFoodDetail(it);
+  h+=mainClose(it.m)+mapBtn(it.m)+`</div>`;
+  return h;
+}
+function renderFoodSimple(it,dayNum,idx){
+  let h=cardOpen('card-food',it,dayNum,idx)+mainOpen(it.m);
+  h+=`<div class="time">${it.t}</div><div class="activity">${it.a}</div>`;
+  h+=warnN(it.n)+renderTags(it.tags)+mainClose(it.m)+mapBtn(it.m)+`</div>`;
+  return h;
+}
+function renderSpotCard(it,dayNum,idx){
+  const e=extractEmoji(it.a);
+  const hasDetail=it.hours||it.n;
+  let h=cardOpen('card-spot'+(hasDetail?' card-expandable':''),it,dayNum,idx)+mainOpen(it.m);
+  h+=`<div class="time">${it.t}</div>`;
+  h+=`<div class="card-header">`;
+  if(e)h+=`<div class="card-icon">${e}</div>`;
+  h+=`<div class="card-body"><div class="activity">${it.a}</div></div></div>`;
+  if(hasDetail){
+    h+=`<div class="card-chevron">▾</div>`;
+    h+=renderSpotDetail(it);
+  }
+  h+=mainClose(it.m)+mapBtn(it.m)+`</div>`;
+  return h;
+}
+function renderHotelCard(it,dayNum,idx){
+  const e=extractEmoji(it.a);
+  let h=cardOpen('card-hotel',it,dayNum,idx)+mainOpen(it.m);
+  h+=`<div class="time">${it.t}</div>`;
+  h+=`<div class="card-header">`;
+  if(e)h+=`<div class="card-icon">${e}</div>`;
+  h+=`<div class="card-body"><div class="activity">${it.a}</div>`;
+  h+=warnN(it.n);
+  h+=`</div></div>`;
+  h+=renderTags(it.tags)+mainClose(it.m)+mapBtn(it.m)+`</div>`;
+  return h;
+}
+function renderDefaultCard(it,dayNum,idx){
+  let h=cardOpen('',it,dayNum,idx)+mainOpen(it.m);
+  h+=`<div class="time">${it.t}</div><div class="activity">${it.a}</div>`;
+  h+=warnN(it.n)+mainClose(it.m)+mapBtn(it.m)+`</div>`;
+  return h;
+}
+function renderCard(it,cat,dayNum,idx){
+  switch(cat){
+    case 'transport':return it.from&&it.to?renderTransportRoute(it,dayNum,idx):renderTransportSimple(it,dayNum,idx);
+    case 'food':return it.shop?renderFoodCard(it,dayNum,idx):renderFoodSimple(it,dayNum,idx);
+    case 'spot':return renderSpotCard(it,dayNum,idx);
+    case 'hotel':return renderHotelCard(it,dayNum,idx);
+    default:return renderDefaultCard(it,dayNum,idx);
+  }
+}
+
+function renderRestaurantCard(it,dayNum,idx){
+  const ha=it.alts&&it.alts.length>0;
+  const hm=!!(it.m);
+  let h=`<div class="rest-card${hm?' has-map':''}${ha?' has-alts':''}"${ha?` data-day="${dayNum}" data-idx="${idx}"`:''}>`;
+  if(ha)h+=`<div class="badge">+${it.alts.length}</div>`;
+  if(hm)h+='<div class="rest-card-main">';
+  h+=`<div class="rest-name">${it.shop||''}</div>`;
+  if(it.oneliner)h+=`<div class="rest-oneliner">「${it.oneliner}」</div>`;
+  h+='<div class="rest-meta">';
+  if(it.type)h+=`<span class="rest-tag">${it.type}</span>`;
+  if(it.station)h+=`<span class="rest-tag">📍 ${it.station}</span>`;
+  h+='</div>';
+  h+='<div class="rest-bottom">';
+  if(it.hours)h+=`<span class="rest-hours">🕐 ${it.hours}</span>`;
+  if(it.price)h+=`<span class="rest-price">💰 ${it.price}</span>`;
+  h+='</div>';
+  if(it.nospicy)h+=`<div class="rest-nospicy">🌿 不辣推薦：${it.nospicy}</div>`;
+  if(hm)h+='</div>';
+  if(hm)h+=mapBtn(it.m);
+  h+='</div>';
+  return h;
+}
+
+function renderSheetAltCard(a){
+  if(a.type){
+    const hm=!!a.map;
+    let h=`<div class="rest-card${hm?' has-map':''}">`;
+    if(hm)h+='<div class="rest-card-main">';
+    h+=`<div class="rest-name">${a.name}</div>`;
+    if(a.oneliner)h+=`<div class="rest-oneliner">「${a.oneliner}」</div>`;
+    h+='<div class="rest-meta">';
+    if(a.type)h+=`<span class="rest-tag">${a.type}</span>`;
+    if(a.station)h+=`<span class="rest-tag">📍 ${a.station}</span>`;
+    h+='</div>';
+    h+='<div class="rest-bottom">';
+    if(a.hours)h+=`<span class="rest-hours">🕐 ${a.hours}</span>`;
+    if(a.price)h+=`<span class="rest-price">💰 ${a.price}</span>`;
+    h+='</div>';
+    if(a.warn)h+=`<div class="rest-warn">⚠️ ${a.warn}</div>`;
+    if(hm)h+='</div>';
+    if(hm)h+=mapBtn(a.map);
+    h+='</div>';
+    return h;
+  }
+  let h=`<div class="alt-card">`;
+  h+=`<div class="alt-name">${a.name}</div>`;
+  if(a.feat)h+=`<div class="alt-feat">${a.feat}</div>`;
+  h+=`<div class="alt-detail">`;
+  if(a.hours)h+=`<span>🕐 ${a.hours}</span>`;
+  if(a.price)h+=`<span>💰 ${a.price}</span>`;
+  h+=`</div>`;
+  if(a.warn)h+=`<div class="alt-warn">⚠️ ${a.warn}</div>`;
+  if(a.map)h+=`<a class="alt-map" href="${mapUrl(a.map)}" target="_blank" rel="noopener">📍 Google Maps</a>`;
+  h+=`</div>`;
+  return h;
+}
+
+function renderMealTab(d){
+  const mealItems={};
+  d.items.forEach((it,idx)=>{if(it.meal){(mealItems[it.meal]=mealItems[it.meal]||[]).push({it,idx});}});
+  const mealOrder=[{key:'朝',label:'🌅 早餐'},{key:'昼',label:'🌞 午餐'},{key:'夜',label:'🌙 晚餐'}];
+  let html='';
+  mealOrder.forEach(m=>{
+    html+=`<div class="meal-group"><div class="meal-group-label">${m.label}</div>`;
+    const items=mealItems[m.key]||[];
+    if(items.length===0){
+      html+=`<div class="meal-empty">未安排 · 行程中自由覓食</div>`;
+    }else{
+      items.forEach(({it,idx})=>{html+=renderRestaurantCard(it,d.day,idx);});
+    }
+    html+=`</div>`;
+  });
+  const snacks=mealItems['小吃']||[];
+  if(snacks.length>0){
+    html+=`<div class="meal-group snack-section"><div class="meal-group-label">🍡 小吃・飲品</div>`;
+    snacks.forEach(({it,idx})=>{html+=renderRestaurantCard(it,d.day,idx);});
+    html+=`</div>`;
+  }
+  return html;
+}
+
+function render(){
+  const tabs=document.getElementById('tabs');
+  const content=document.getElementById('content');
+
+  tabs.innerHTML=`<div class="tab" data-day="0">🏠<br><span style="font-size:10px;font-weight:400">總覽</span></div>`+DAYS.map(d=>
+    `<div class="tab" data-day="${d.day}">Day ${d.day}<br><span style="font-size:10px;font-weight:400">${d.date.slice(0,5)}</span></div>`
+  ).join('');
+
+  content.innerHTML=`<div class="day-view" id="day0"></div>`+
+  DAYS.map(d=>{
+    let html=`<div class="day-view" id="day${d.day}">`;
+    html+=`<div class="day-header"><div class="date">Day ${d.day} — ${d.date}</div><div class="dtitle">${d.title}</div>`;
+    if(d.hotel)html+=`<div class="hotel">${d.hotel}</div>`;
+    d.warns.forEach(w=>html+=`<div class="warn">⚠️ ${w}</div>`);
+    html+=`</div>`;
+    html+=`<div class="day-subtabs"><div class="day-subtab active" data-subtab="itinerary">🗓 行程</div><div class="day-subtab" data-subtab="meals">🍽 三餐</div></div>`;
+    html+=`<div class="tab-section active" data-section="itinerary">`;
+    html+=`<div class="timeline">`;
+    d.items.forEach((it,idx)=>{
+      if(it.meal)return;
+      const cat=getCat(it.a);
+      html+=`<div class="item"${cat?` data-cat="${cat}"`:''}>`;
+      html+=renderCard(it,cat,d.day,idx);
+      html+=`</div>`;
+    });
+    html+=`</div>`;
+    if(d.budget){
+      html+=`<div class="budget"><h3>💰 費用概算（5人）</h3><table>`;
+      d.budget.forEach((b,i,a)=>{
+        const cls=i===a.length-1?' class="total"':'';
+        html+=`<tr${cls}><td>${b[0]}</td><td>${b[1]}</td></tr>`;
+      });
+      html+=`</table></div>`;
+    }
+    html+=`</div>`;
+    html+=`<div class="tab-section" data-section="meals">${renderMealTab(d)}</div>`;
+    html+=`</div>`;
+    return html;
+  }).join('');
+
+  let active=0;
+  function setDay(n){
+    active=n;
+    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',+t.dataset.day===n));
+    document.querySelectorAll('.day-view').forEach(v=>v.classList.toggle('active',v.id===`day${n}`));
+    if(n===0&&!_dashRendered)renderDashboard();
+    const dv=document.getElementById(`day${n}`);
+    if(dv){
+      const firstSub=dv.querySelector('.day-subtab');
+      const firstSec=firstSub?firstSub.dataset.subtab:null;
+      dv.querySelectorAll('.day-subtab').forEach((t,i)=>t.classList.toggle('active',i===0));
+      if(firstSec)dv.querySelectorAll('.tab-section').forEach(s=>s.classList.toggle('active',s.dataset.section===firstSec));
+    }
+    const at=document.querySelector('.tab.active');
+    if(at)at.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  tabs.addEventListener('click',e=>{
+    const tab=e.target.closest('.tab');
+    if(tab)setDay(+tab.dataset.day);
+  });
+
+  let sx=0,sy=0;
+  content.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+  content.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-sx;
+    const dy=e.changedTouches[0].clientY-sy;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5){
+      if(dx<0&&active<6)setDay(active+1);
+      else if(dx>0&&active>0)setDay(active-1);
+    }
+  },{passive:true});
+
+  content.addEventListener('click',e=>{
+    const subtab=e.target.closest('.day-subtab');
+    if(subtab){
+      const dv=subtab.closest('.day-view');
+      if(!dv)return;
+      dv.querySelectorAll('.day-subtab').forEach(t=>t.classList.remove('active'));
+      subtab.classList.add('active');
+      const sec=subtab.dataset.subtab;
+      dv.querySelectorAll('.tab-section').forEach(s=>s.classList.toggle('active',s.dataset.section===sec));
+      return;
+    }
+    if(e.target.closest('a'))return;
+    const badge=e.target.closest('.badge');
+    if(badge){const card=badge.closest('[data-day]');if(card){const day=+card.dataset.day,idx=+card.dataset.idx;const it=DAYS.find(d=>d.day===day).items[idx];if(it&&it.alts)openSheet(it.alts,it.a);}return;}
+    const exp=e.target.closest('.card-expandable');
+    if(exp){exp.classList.toggle('expanded');return;}
+    const alt=e.target.closest('.has-alts');
+    if(alt&&alt.dataset.day){const day=+alt.dataset.day,idx=+alt.dataset.idx;const it=DAYS.find(d=>d.day===day).items[idx];if(it&&it.alts)openSheet(it.alts,it.a);}
+  });
+
+  const today=new Date();
+  const dayMap={18:1,19:2,20:3,21:4,22:5,23:6};
+  const autoDay=(today.getFullYear()===2026&&today.getMonth()===6)?dayMap[today.getDate()]||0:0;
+  setDay(autoDay);
+}
+
+/* Dashboard */
+let currentRate=FALLBACK_RATE;
+let rateSource='fallback';
+let rateTime='';
+
+async function fetchRate(){
+  const cached=localStorage.getItem('thb_rate');
+  const cachedTime=localStorage.getItem('thb_rate_time');
+  if(cached){currentRate=+cached;rateSource='cached';rateTime=cachedTime||'';}
+  try{
+    const r=await fetch('https://open.er-api.com/v6/latest/THB');
+    const j=await r.json();
+    if(j.result==='success'&&j.rates&&j.rates.TWD){
+      currentRate=j.rates.TWD;
+      rateSource='online';
+      rateTime=new Date().toLocaleString('zh-TW',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+      localStorage.setItem('thb_rate',currentRate);
+      localStorage.setItem('thb_rate_time',rateTime);
+    }
+  }catch(e){}
+  updateRateUI();
+}
+
+function updateRateUI(){
+  const el=document.getElementById('rate-status');
+  if(!el)return;
+  const dotCls=rateSource==='online'?'online':rateSource==='cached'?'cached':'fallback';
+  const label=rateSource==='online'?`線上即時 · ${rateTime}`:rateSource==='cached'?`離線快取 · ${rateTime}`:'預設匯率（無快取）';
+  el.innerHTML=`<span class="rate-dot ${dotCls}"></span>${label}`;
+  const rateVal=document.getElementById('rate-value');
+  if(rateVal)rateVal.textContent=currentRate.toFixed(4);
+  const thbInput=document.getElementById('calc-thb');
+  if(thbInput&&thbInput.value)calcFromThb();
+}
+
+function calcFromThb(){
+  const v=parseFloat(document.getElementById('calc-thb').value)||0;
+  document.getElementById('calc-twd').value=v?Math.round(v*currentRate):'';
+}
+function calcFromTwd(){
+  const v=parseFloat(document.getElementById('calc-twd').value)||0;
+  document.getElementById('calc-thb').value=v?Math.round(v/currentRate):'';
+}
+
+let _dashRendered=false;
+function renderDashboard(){
+  const el=document.getElementById('day0');
+  let html='<div class="day-subtabs">';
+  html+='<div class="day-subtab active" data-subtab="warns">⚠️ 注意</div>';
+  html+='<div class="day-subtab" data-subtab="budget">💰 預算</div>';
+  html+='<div class="day-subtab" data-subtab="calc">💱 匯率</div>';
+  html+='<div class="day-subtab" data-subtab="nospicy">🌶️ 不辣</div>';
+  html+='</div>';
+
+  // Warns
+  let warns='<div class="dash-section"><h3>⚠️ 注意事項</h3>';
+  GLOBAL_WARNS.forEach(w=>warns+=`<div class="dash-warn">${w}</div>`);
+  DAYS.forEach(d=>d.warns.forEach(w=>warns+=`<div class="dash-warn">Day ${d.day}：${w}</div>`));
+  warns+='</div>';
+  html+=`<div class="tab-section active" data-section="warns">${warns}</div>`;
+
+  // Budget
+  const thbAmounts=[];
+  DAYS.forEach(d=>{
+    if(!d.budget)return;
+    const totalRow=d.budget[d.budget.length-1];
+    const totalStr=totalRow[1];
+    const thbMatch=totalStr.match(/[~]?฿([0-9,]+)/);
+    if(thbMatch)thbAmounts.push({day:d.day,title:d.title,thb:parseInt(thbMatch[1].replace(/,/g,''))});
+  });
+  const thbTotal=thbAmounts.reduce((s,x)=>s+x.thb,0);
+  let budget='<div class="dash-section"><h3>💰 預估總花費（5人）</h3><table class="dash-table">';
+  thbAmounts.forEach(x=>{budget+=`<tr><td>Day ${x.day} ${x.title}</td><td>~฿${x.thb.toLocaleString()}</td></tr>`;});
+  budget+=`<tr class="total"><td>泰銖小計</td><td>~฿${thbTotal.toLocaleString()}</td></tr>`;
+  const grandTotal=Math.round(thbTotal*currentRate);
+  budget+=`<tr class="total"><td>換算總計</td><td>≈ NT$${grandTotal.toLocaleString()}</td></tr>`;
+  budget+='</table></div>';
+  html+=`<div class="tab-section" data-section="budget">${budget}</div>`;
+
+  // Calculator
+  const dotCls=rateSource==='online'?'online':rateSource==='cached'?'cached':'fallback';
+  const rateLabel=rateSource==='online'?`線上即時 · ${rateTime}`:rateSource==='cached'?`離線快取 · ${rateTime}`:'預設匯率（無快取）';
+  let calc='<div class="dash-section"><h3>💱 泰銖計算機</h3>';
+  calc+=`<div class="calc-row"><span class="calc-label">฿</span><input class="calc-input" id="calc-thb" type="number" inputmode="numeric" placeholder="泰銖金額"></div>`;
+  calc+=`<div class="calc-arrow">↕</div>`;
+  calc+=`<div class="calc-row"><span class="calc-label">NT$</span><input class="calc-input" id="calc-twd" type="number" inputmode="numeric" placeholder="台幣金額"></div>`;
+  calc+=`<div class="rate-status" id="rate-status"><span class="rate-dot ${dotCls}"></span>${rateLabel}</div>`;
+  calc+=`<div style="font-size:11px;color:var(--text-light);margin-top:2px">匯率 <span id="rate-value">${currentRate.toFixed(4)}</span></div>`;
+  calc+='</div>';
+  html+=`<div class="tab-section" data-section="calc">${calc}</div>`;
+
+  // No-spicy guide
+  let nospicy='<div class="dash-section"><h3>🌶️ 不吃辣生存指南</h3>';
+  nospicy+='<p style="font-size:12px;color:var(--text-light);margin-bottom:12px">以下泰文句子可直接給店員看</p>';
+  const phrases=[
+    {thai:'ไม่เผ็ดนะครับ/ค่ะ',cn:'不要辣',en:'Not spicy, please.'},
+    {thai:'ไม่ใส่พริก',cn:'不要放辣椒',en:'No chili, please.'},
+    {thai:'พริกแยก',cn:'辣椒另外放',en:'Chili on the side.'}
+  ];
+  phrases.forEach(p=>{
+    nospicy+=`<div class="nospicy-phrase"><div class="nospicy-thai">${p.thai}</div><div class="nospicy-row"><span class="nospicy-cn">${p.cn}</span><span class="nospicy-en">${p.en}</span></div></div>`;
+  });
+  nospicy+='</div>';
+  nospicy+='<div class="dash-section"><h3>🌿 安全不辣美食</h3>';
+  const safeFoods=['烤海鮮（醬分開）','海南雞飯','清湯麵/粥','壽司/刺身','炒河粉（不辣）','烤玉米/肉串','芒果糯米飯','椰子冰淇淋'];
+  nospicy+='<div class="nospicy-foods">';
+  safeFoods.forEach(f=>{nospicy+=`<div class="nospicy-food">${f}</div>`;});
+  nospicy+='</div></div>';
+  html+=`<div class="tab-section" data-section="nospicy">${nospicy}</div>`;
+
+  el.innerHTML=html;
+  document.getElementById('calc-thb').addEventListener('input',calcFromThb);
+  document.getElementById('calc-twd').addEventListener('input',calcFromTwd);
+  _dashRendered=true;
+}
+
+/* Bottom Sheet */
+let _sheetOverlay=null,_sheetEl=null;
+function openSheet(alts,title){
+  closeSheet(true);
+  const overlay=document.createElement('div');
+  overlay.className='overlay';
+  const sheet=document.createElement('div');
+  sheet.className='sheet';
+  let body='';
+  alts.forEach(a=>{body+=renderSheetAltCard(a);});
+  sheet.innerHTML=`<div class="sheet-handle"></div><div class="sheet-head"><div class="sheet-title">備選方案</div><button class="sheet-close">✕</button></div><div class="sheet-body">${body}</div>`;
+  document.body.appendChild(overlay);
+  document.body.appendChild(sheet);
+  _sheetOverlay=overlay;_sheetEl=sheet;
+  requestAnimationFrame(()=>{overlay.classList.add('show');sheet.classList.add('show')});
+  overlay.addEventListener('click',closeSheet);
+  sheet.querySelector('.sheet-close').addEventListener('click',closeSheet);
+  let ty=0;
+  sheet.addEventListener('touchstart',e=>{ty=e.touches[0].clientY},{passive:true});
+  sheet.addEventListener('touchend',e=>{if(e.changedTouches[0].clientY-ty>80)closeSheet()},{passive:true});
+}
+function closeSheet(immediate){
+  const o=_sheetOverlay,s=_sheetEl;
+  _sheetOverlay=null;_sheetEl=null;
+  if(!o&&!s)return;
+  if(immediate){if(o)o.remove();if(s)s.remove();return;}
+  if(o)o.classList.remove('show');
+  if(s)s.classList.remove('show');
+  setTimeout(()=>{if(o)o.remove();if(s)s.remove()},250);
+}
+
+render();
+fetchRate();
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>
