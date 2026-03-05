@@ -11,8 +11,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
-<script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await(a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({key:"AIzaSyCHnrW003p5uFNFX_EG6yht0S5duIeeln4",v:"weekly"});</script>
-<script async src="https://unpkg.com/@googlemaps/extended-component-library@0.6/dist/index.min.js"></script>
+<script type="module" src="https://unpkg.com/@googlemaps/extended-component-library@0.6/dist/index.min.js"></script>
 <title>🇹🇭 2026 曼谷自由行</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -257,6 +256,7 @@ gmpx-place-overview{display:block;width:100%}
 </style>
 </head>
 <body>
+<gmpx-api-loader key="AIzaSyCHnrW003p5uFNFX_EG6yht0S5duIeeln4" solution-channel="GMP_QB_01"></gmpx-api-loader>
 
 <div class="header">
   <h1>🇹🇭 2026 曼谷自由行</h1>
@@ -709,7 +709,7 @@ async function updateMichMarkers(data){
   data.forEach(r=>{
     const color=MICHELIN_AWARD_COLORS[r.award]||'#999999';
     const pin=new PinElement({background:color,borderColor:'#ffffff',glyphColor:'#ffffff',scale:0.9});
-    const marker=new AdvancedMarkerElement({map:_michGMap,position:{lat:r.lat,lng:r.lng},title:r.name,content:pin.element});
+    const marker=new AdvancedMarkerElement({map:_michGMap,position:{lat:r.lat,lng:r.lng},title:r.name,content:pin});
     marker.addEventListener('gmp-click',()=>{
       const awardInfo=r.award!=='Selected Restaurants'?{award:r.award,cuisine:r.cuisine,price:r.price}:null;
       showPlaceCard(r.pid,r.name,awardInfo);
@@ -745,7 +745,7 @@ async function initMap(containerId,places,size){
   places.forEach(p=>{
     const color=MAP_COLORS[p.cat]||'#999999';
     const pin=new PinElement({background:color,borderColor:'#ffffff',glyphColor:'#ffffff',scale:0.9});
-    const marker=new AdvancedMarkerElement({map,position:{lat:p.lat,lng:p.lng},title:p.name,content:pin.element});
+    const marker=new AdvancedMarkerElement({map,position:{lat:p.lat,lng:p.lng},title:p.name,content:pin});
     marker.addEventListener('gmp-click',()=>showPlaceCard(p.pid,p.name,null));
     bounds.extend({lat:p.lat,lng:p.lng});
   });
