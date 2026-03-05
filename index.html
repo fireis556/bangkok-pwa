@@ -147,16 +147,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .budget tr.total td{border-top:1.5px dashed var(--border);padding-top:8px;font-weight:700;color:var(--accent)}
 .badge{position:absolute;top:6px;right:8px;background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:10px;cursor:pointer}
 .card.has-alts{cursor:pointer}
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:200;opacity:0;transition:opacity .25s}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1500;opacity:0;transition:opacity .2s}
 .overlay.show{opacity:1}
-.sheet{position:fixed;left:0;right:0;bottom:0;z-index:201;background:#fff;border-radius:16px 16px 0 0;max-height:70vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .25s ease-out;box-shadow:0 -4px 20px rgba(0,0,0,.1)}
-.sheet.show{transform:translateY(0)}
-.sheet-handle{width:36px;height:4px;background:#d1d1d6;border-radius:2px;margin:10px auto 0}
-.sheet-head{display:flex;align-items:center;padding:12px 16px 8px;border-bottom:1px solid var(--border)}
-.sheet-title{flex:1;font-size:14px;font-weight:700;color:var(--text)}
+.sheet{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(.93);z-index:1501;background:var(--bg);border-radius:18px;width:min(92vw,440px);max-height:84vh;display:flex;flex-direction:column;overflow:hidden;opacity:0;transition:opacity .2s,transform .2s;box-shadow:0 12px 50px rgba(0,0,0,.28)}
+.sheet.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.sheet-handle{display:none}
+.sheet-head{display:flex;align-items:center;padding:14px 16px 10px;border-bottom:1px solid var(--border);flex-shrink:0}
+.sheet-title{flex:1;font-size:15px;font-weight:700;color:var(--text)}
 .sheet-close{width:28px;height:28px;border:none;background:var(--bg);border-radius:50%;font-size:16px;color:var(--text-light);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
 .sheet-close:active{background:#d1d1d6}
-.sheet-body{overflow-y:auto;padding:12px 16px 24px;-webkit-overflow-scrolling:touch}
+.sheet-body{flex:1;min-height:0;overflow-y:auto;padding:12px 16px 24px;-webkit-overflow-scrolling:touch}
 .sheet-body .rest-card{box-shadow:none;background:linear-gradient(135deg,rgba(255,149,0,.04),rgba(255,149,0,.08))}
 .alt-card{background:var(--bg);border-radius:14px;padding:12px 14px;margin-bottom:10px}
 .alt-card:last-child{margin-bottom:0}
@@ -724,8 +724,7 @@ async function updateMichMarkers(data){
     const pin=new PinElement({background:color,borderColor:'#ffffff',glyphColor:'#ffffff',scale:0.9});
     const marker=new AdvancedMarkerElement({map:_michGMap,position:{lat:r.lat,lng:r.lng},title:r.name,content:pin,gmpClickable:true});
     onMarkerTap(marker,()=>{
-      const awardInfo=r.award!=='Selected Restaurants'?{award:r.award,cuisine:r.cuisine,price:r.price}:null;
-      showPlaceCard(r.pid,r.name,awardInfo);
+      showPlaceCard(r.pid,r.name,{award:r.award,cuisine:r.cuisine,price:r.price});
     });
     _michMarkers.push(marker);
     bounds.extend({lat:r.lat,lng:r.lng});
@@ -800,16 +799,13 @@ function showPlaceCard(pid,name,awardInfo){
     const label=MICH_AWARD_LABELS[awardInfo.award]||awardInfo.award;
     badgeHtml=`<div class="place-award-row"><span class="mich-card-award ${cls}">${label}</span><span class="place-award-meta">${awardInfo.cuisine} · ${awardInfo.price}</span></div>`;
   }
-  const navUrl=`https://www.google.com/maps/place/?q=place_id:${pid}`;
+  const navUrl=`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}&query_place_id=${pid}`;
   sheet.innerHTML=`<div class="sheet-handle"></div><div class="sheet-head"><div class="sheet-title">${name}</div><button class="sheet-close">✕</button></div><div class="sheet-body">${badgeHtml}<gmpx-place-overview place="${pid}" size="large"></gmpx-place-overview><a class="place-gmaps-link" href="${navUrl}" target="_blank" rel="noopener">🗺 在 Google 地圖開啟</a></div>`;
   document.body.appendChild(overlay);document.body.appendChild(sheet);
   _sheetOverlay=overlay;_sheetEl=sheet;
   requestAnimationFrame(()=>{overlay.classList.add('show');sheet.classList.add('show')});
   overlay.addEventListener('click',closeSheet);
   sheet.querySelector('.sheet-close').addEventListener('click',closeSheet);
-  let ty=0;
-  sheet.addEventListener('touchstart',e=>{ty=e.touches[0].clientY},{passive:true});
-  sheet.addEventListener('touchend',e=>{if(e.changedTouches[0].clientY-ty>80)closeSheet()},{passive:true});
 }
 function getCat(a){
   if(/[✈🚃🚇🚌🚡🚕🚢🚶🚻]/u.test(a))return 'transport';
@@ -1392,9 +1388,6 @@ function openSheet(alts,title){
   requestAnimationFrame(()=>{overlay.classList.add('show');sheet.classList.add('show')});
   overlay.addEventListener('click',closeSheet);
   sheet.querySelector('.sheet-close').addEventListener('click',closeSheet);
-  let ty=0;
-  sheet.addEventListener('touchstart',e=>{ty=e.touches[0].clientY},{passive:true});
-  sheet.addEventListener('touchend',e=>{if(e.changedTouches[0].clientY-ty>80)closeSheet()},{passive:true});
 }
 function closeSheet(immediate){
   const o=_sheetOverlay,s=_sheetEl;
