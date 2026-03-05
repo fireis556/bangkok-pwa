@@ -159,7 +159,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .sheet-body{flex:1;min-height:0;overflow-y:auto;padding:12px 16px 24px;-webkit-overflow-scrolling:touch}
 .sheet-peek{position:fixed;left:12px;right:12px;bottom:12px;z-index:1501;background:var(--bg);border-radius:16px;max-height:52vh;display:flex;flex-direction:column;overflow:hidden;opacity:0;transform:translateY(24px);transition:opacity .2s,transform .25s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 40px rgba(0,0,0,.3);cursor:pointer}
 .sheet-peek.show{opacity:1;transform:translateY(0)}
-.photo-strip{display:flex;gap:8px;overflow-x:auto;padding:10px 16px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;flex-shrink:0;scrollbar-width:none}
+.sheet-peek .sheet-head{padding:8px 10px;border-bottom:none;justify-content:flex-end}
+.sheet-peek .sheet-body{padding:4px 12px 10px}
+.photo-strip{display:flex;gap:8px;overflow-x:auto;padding:6px 12px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;flex-shrink:0;scrollbar-width:none}
 .photo-strip::-webkit-scrollbar{display:none}
 .photo-thumb{flex-shrink:0;width:160px;height:110px;border-radius:10px;object-fit:cover;scroll-snap-align:start}
 .photo-skeleton{flex-shrink:0;width:160px;height:110px;border-radius:10px;background:linear-gradient(90deg,var(--border) 25%,rgba(128,128,128,.1) 50%,var(--border) 75%);background-size:200% 100%;animation:shimmer 1.2s infinite}
@@ -797,14 +799,14 @@ function mapUrl(q){return `https://www.google.com/maps/search/?api=1&query=${enc
 function showPlaceCard(pid,name,awardInfo){
   closeSheet(true);
   const sheet=document.createElement('div');sheet.className='sheet-peek';
-  let badgeHtml='';
+  let headerBadge='';
   if(awardInfo){
     const cls=awardInfo.award==='1 Star'?'mich-award-star':awardInfo.award==='Bib Gourmand'?'mich-award-bib':'mich-award-sel';
     const label=MICH_AWARD_LABELS[awardInfo.award]||awardInfo.award;
-    badgeHtml=`<div class="place-award-row"><span class="mich-card-award ${cls}">${label}</span><span class="place-award-meta">${awardInfo.cuisine} · ${awardInfo.price}</span></div>`;
+    headerBadge=`<div style="flex:1;display:flex;align-items:center;gap:8px"><span class="mich-card-award ${cls}">${label}</span><span class="place-award-meta">${awardInfo.cuisine} · ${awardInfo.price}</span></div>`;
   }
   const navUrl=`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}&query_place_id=${pid}`;
-  sheet.innerHTML=`<div class="sheet-head"><div class="sheet-title">${name}</div><button class="sheet-close">✕</button></div><div class="photo-strip" id="peek-photos"><div class="photo-skeleton"></div><div class="photo-skeleton"></div><div class="photo-skeleton"></div></div><div class="sheet-body">${badgeHtml}<gmpx-place-overview place="${pid}" size="small"></gmpx-place-overview></div>`;
+  sheet.innerHTML=`<div class="sheet-head">${headerBadge}<button class="sheet-close">✕</button></div><div class="photo-strip" id="peek-photos"><div class="photo-skeleton"></div><div class="photo-skeleton"></div><div class="photo-skeleton"></div></div><div class="sheet-body"><gmpx-place-overview place="${pid}" size="small"></gmpx-place-overview></div>`;
   document.body.appendChild(sheet);
   _sheetOverlay=null;_sheetEl=sheet;
   requestAnimationFrame(()=>{sheet.classList.add('show')});
