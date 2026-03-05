@@ -710,7 +710,7 @@ async function updateMichMarkers(data){
     const color=MICHELIN_AWARD_COLORS[r.award]||'#999999';
     const pin=new PinElement({background:color,borderColor:'#ffffff',glyphColor:'#ffffff',scale:0.9});
     const marker=new AdvancedMarkerElement({map:_michGMap,position:{lat:r.lat,lng:r.lng},title:r.name,content:pin,gmpClickable:true});
-    marker.addEventListener('gmp-click',()=>{
+    marker.addListener('click',()=>{
       const awardInfo=r.award!=='Selected Restaurants'?{award:r.award,cuisine:r.cuisine,price:r.price}:null;
       showPlaceCard(r.pid,r.name,awardInfo);
     });
@@ -746,7 +746,7 @@ async function initMap(containerId,places,size){
     const color=MAP_COLORS[p.cat]||'#999999';
     const pin=new PinElement({background:color,borderColor:'#ffffff',glyphColor:'#ffffff',scale:0.9});
     const marker=new AdvancedMarkerElement({map,position:{lat:p.lat,lng:p.lng},title:p.name,content:pin,gmpClickable:true});
-    marker.addEventListener('gmp-click',()=>showPlaceCard(p.pid,p.name,null));
+    marker.addListener('click',()=>showPlaceCard(p.pid,p.name,null));
     bounds.extend({lat:p.lat,lng:p.lng});
   });
   if(places.length>1)map.fitBounds(bounds,{top:25,right:25,bottom:25,left:25});
