@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#faf8f3">
+<meta name="theme-color" content="#1a1208">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="manifest.json">
@@ -19,11 +19,11 @@
 :root{--accent:#c89b3c;--bg:#faf8f3;--text:#1d1d1f;--text-light:#86868b;--card-bg:#fff;--border:#e5e5ea;--shadow:0 1px 3px rgba(0,0,0,.04),0 4px 12px rgba(0,0,0,.06);--cat-transport:#5ac8fa;--cat-food:#ff9500;--cat-spot:#34c759;--cat-hotel:#af52de;--cat-default:#e5e5ea}
 body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,"Noto Sans TC",sans-serif;background:var(--bg);background-image:radial-gradient(ellipse at 50% 0%,rgba(200,155,60,.04) 0%,transparent 70%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%23faf8f3'/%3E%3Crect x='0' y='0' width='1' height='1' fill='%23f0ece3' fill-opacity='.4'/%3E%3C/svg%3E");color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden}
 .header h1,.day-header .date,.card-shop,.rest-name,.mich-card-name,.dash-section h3,.budget h3{font-family:'Outfit',sans-serif}
-.header{background:linear-gradient(180deg,rgba(255,253,248,.92) 0%,rgba(250,245,235,.92) 100%);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);color:var(--text);padding:16px 16px 12px;text-align:center;position:sticky;top:0;z-index:100;border-bottom:none}
+.header{position:sticky;top:0;z-index:100;text-align:center;padding:20px 16px 14px;color:#fff;background:linear-gradient(180deg,rgba(26,18,8,.7) 0%,rgba(26,18,8,.55) 100%),url('https://images.unsplash.com/photo-1736128023093-9a2d76b20cf2?w=800&q=75&auto=format&fit=crop&crop=center') center 35%/cover no-repeat;background-color:#1a1208;border-bottom:none;overflow:hidden}
+.header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 80%,rgba(200,155,60,.18) 0%,transparent 65%);pointer-events:none}
 .header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#c89b3c,#ff9500,#c89b3c)}
-@supports(backdrop-filter:blur(1px)){.header{background:rgba(255,253,248,.72)}}
-.header h1{font-size:18px;font-weight:800;letter-spacing:-.2px}
-.header .sub{font-size:12px;color:var(--text-light);margin-top:3px;font-weight:500}
+.header h1{font-size:20px;font-weight:800;letter-spacing:-.2px;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.5);position:relative}
+.header .sub{font-size:12px;color:rgba(255,255,255,.8);margin-top:4px;font-weight:500;text-shadow:0 1px 4px rgba(0,0,0,.4);position:relative;letter-spacing:.3px}
 .tabs{display:flex;position:sticky;top:53px;z-index:99;background:rgba(250,248,243,.92);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid rgba(0,0,0,.08);overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 @supports(backdrop-filter:blur(1px)){.tabs{background:rgba(255,253,248,.72)}}
 .tabs::-webkit-scrollbar{display:none}
@@ -1065,6 +1065,9 @@ function render(){
   const dayMap={18:1,19:2,20:3,21:4,22:5,23:6};
   const autoDay=(today.getFullYear()===2026&&today.getMonth()===6)?dayMap[today.getDate()]||0:0;
   setDay(autoDay);
+  // Dynamic tabs top offset based on actual header height
+  const hdrH=document.querySelector('.header').offsetHeight;
+  document.querySelector('.tabs').style.top=hdrH+'px';
 }
 
 /* Dashboard */
