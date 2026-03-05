@@ -157,8 +157,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .sheet-close{width:28px;height:28px;border:none;background:var(--bg);border-radius:50%;font-size:16px;color:var(--text-light);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s}
 .sheet-close:active{background:#d1d1d6}
 .sheet-body{flex:1;min-height:0;overflow-y:auto;padding:12px 16px 24px;-webkit-overflow-scrolling:touch}
-.sheet-peek{position:fixed;left:12px;right:12px;bottom:12px;z-index:1501;background:var(--bg);border-radius:16px;max-height:52vh;display:flex;flex-direction:column;overflow:hidden;opacity:0;transform:translateY(24px);transition:opacity .2s,transform .25s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 40px rgba(0,0,0,.3)}
+.sheet-peek{position:fixed;left:12px;right:12px;bottom:12px;z-index:1501;background:var(--bg);border-radius:16px;max-height:52vh;display:flex;flex-direction:column;overflow:hidden;opacity:0;transform:translateY(24px);transition:opacity .2s,transform .25s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 40px rgba(0,0,0,.3);cursor:pointer}
 .sheet-peek.show{opacity:1;transform:translateY(0)}
+.photo-strip{display:flex;gap:8px;overflow-x:auto;padding:10px 16px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;flex-shrink:0;scrollbar-width:none}
+.photo-strip::-webkit-scrollbar{display:none}
+.photo-thumb{flex-shrink:0;width:160px;height:110px;border-radius:10px;object-fit:cover;scroll-snap-align:start}
+.photo-skeleton{flex-shrink:0;width:160px;height:110px;border-radius:10px;background:linear-gradient(90deg,var(--border) 25%,rgba(128,128,128,.1) 50%,var(--border) 75%);background-size:200% 100%;animation:shimmer 1.2s infinite}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .sheet-body .rest-card{box-shadow:none;background:linear-gradient(135deg,rgba(255,149,0,.04),rgba(255,149,0,.08))}
 .alt-card{background:var(--bg);border-radius:14px;padding:12px 14px;margin-bottom:10px}
 .alt-card:last-child{margin-bottom:0}
@@ -253,8 +258,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .place-award-row{display:flex;align-items:center;gap:8px;padding:10px 0 12px;border-bottom:1px solid var(--border);margin-bottom:12px}
 .place-award-meta{font-size:12px;color:var(--text-light)}
 gmpx-place-overview{display:block;width:100%}
-.place-gmaps-link{display:block;margin-top:14px;padding:10px;background:rgba(200,155,60,.08);border:1px solid rgba(200,155,60,.2);border-radius:10px;text-align:center;color:var(--accent);font-size:13px;font-weight:600;text-decoration:none}
-.place-gmaps-link:active{background:rgba(200,155,60,.18)}
 </style>
 </head>
 <body>
@@ -801,11 +804,28 @@ function showPlaceCard(pid,name,awardInfo){
     badgeHtml=`<div class="place-award-row"><span class="mich-card-award ${cls}">${label}</span><span class="place-award-meta">${awardInfo.cuisine} · ${awardInfo.price}</span></div>`;
   }
   const navUrl=`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}&query_place_id=${pid}`;
-  sheet.innerHTML=`<div class="sheet-head"><div class="sheet-title">${name}</div><button class="sheet-close">✕</button></div><div class="sheet-body">${badgeHtml}<gmpx-place-overview place="${pid}" size="small"></gmpx-place-overview><a class="place-gmaps-link" href="${navUrl}" target="_blank" rel="noopener">🗺 在 Google 地圖開啟</a></div>`;
+  sheet.innerHTML=`<div class="sheet-head"><div class="sheet-title">${name}</div><button class="sheet-close">✕</button></div><div class="photo-strip" id="peek-photos"><div class="photo-skeleton"></div><div class="photo-skeleton"></div><div class="photo-skeleton"></div></div><div class="sheet-body">${badgeHtml}<gmpx-place-overview place="${pid}" size="small"></gmpx-place-overview></div>`;
   document.body.appendChild(sheet);
   _sheetOverlay=null;_sheetEl=sheet;
   requestAnimationFrame(()=>{sheet.classList.add('show')});
-  sheet.querySelector('.sheet-close').addEventListener('click',closeSheet);
+  sheet.querySelector('.sheet-close').addEventListener('click',e=>{e.stopPropagation();closeSheet();});
+  sheet.querySelector('.photo-strip').addEventListener('click',e=>e.stopPropagation());
+  sheet.addEventListener('click',()=>window.open(navUrl,'_blank','noopener'));
+  (async()=>{
+    try{
+      const {Place}=await google.maps.importLibrary('places');
+      const place=new Place({id:pid});
+      await place.fetchFields({fields:['photos']});
+      const strip=sheet.querySelector('#peek-photos');
+      if(!strip)return;
+      const photos=(place.photos||[]).slice(0,5);
+      if(!photos.length){strip.remove();return;}
+      strip.innerHTML=photos.map(p=>`<img class="photo-thumb" src="${p.getURI({maxWidth:320,maxHeight:220})}" loading="lazy">`).join('');
+    }catch(e){
+      const strip=sheet.querySelector('#peek-photos');
+      if(strip)strip.remove();
+    }
+  })();
 }
 function getCat(a){
   if(/[✈🚃🚇🚌🚡🚕🚢🚶🚻]/u.test(a))return 'transport';
