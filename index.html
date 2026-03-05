@@ -700,6 +700,19 @@ function _removeMichLocMarker(){
   if(_michLocMarker){_michLocMarker.map=null;_michLocMarker=null;}
   if(_michLocCircle){_michLocCircle.setMap(null);_michLocCircle=null;}
 }
+function onMarkerTap(marker,fn){
+  let ts=null,last=0;
+  const fire=()=>{const now=Date.now();if(now-last>600){last=now;fn();}};
+  marker.addEventListener('touchstart',e=>{ts=e.touches[0];},{passive:true});
+  marker.addEventListener('touchend',e=>{
+    if(!ts)return;
+    const dx=Math.abs(e.changedTouches[0].clientX-ts.clientX);
+    const dy=Math.abs(e.changedTouches[0].clientY-ts.clientY);
+    ts=null;
+    if(dx<10&&dy<10){e.preventDefault();fire();}
+  },{passive:false});
+  marker.addListener('click',fire);
+}
 async function updateMichMarkers(data){
   if(!_michGMap)return;
   _michMarkers.forEach(m=>m.map=null);
@@ -710,7 +723,7 @@ async function updateMichMarkers(data){
     const color=MICHELIN_AWARD_COLORS[r.award]||'#999999';
     const pin=new PinElement({background:color,borderColor:'#ffffff',glyphColor:'#ffffff',scale:0.9});
     const marker=new AdvancedMarkerElement({map:_michGMap,position:{lat:r.lat,lng:r.lng},title:r.name,content:pin,gmpClickable:true});
-    marker.addListener('click',()=>{
+    onMarkerTap(marker,()=>{
       const awardInfo=r.award!=='Selected Restaurants'?{award:r.award,cuisine:r.cuisine,price:r.price}:null;
       showPlaceCard(r.pid,r.name,awardInfo);
     });
@@ -746,7 +759,7 @@ async function initMap(containerId,places,size){
     const color=MAP_COLORS[p.cat]||'#999999';
     const pin=new PinElement({background:color,borderColor:'#ffffff',glyphColor:'#ffffff',scale:0.9});
     const marker=new AdvancedMarkerElement({map,position:{lat:p.lat,lng:p.lng},title:p.name,content:pin,gmpClickable:true});
-    marker.addListener('click',()=>showPlaceCard(p.pid,p.name,null));
+    onMarkerTap(marker,()=>showPlaceCard(p.pid,p.name,null));
     bounds.extend({lat:p.lat,lng:p.lng});
   });
   if(places.length>1)map.fitBounds(bounds,{top:25,right:25,bottom:25,left:25});
