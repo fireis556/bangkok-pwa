@@ -777,7 +777,7 @@ async function updateMichMarkers(data){
 /* ── Nearby helpers ── */
 let _nbUserPos=null;
 let _nbActiveCats=new Set();
-let _nbGMap=null,_nbMarkers=[],_nbLandmarkMarkers=[],_nbLocMarker=null,_nbLocCircle=null,_nbRangeCircle=null;
+let _nbGMap=null,_nbMapInit=false,_nbMarkers=[],_nbLandmarkMarkers=[],_nbLocMarker=null,_nbLocCircle=null,_nbRangeCircle=null;
 
 function nbRequestLocation(){
   if(!navigator.geolocation)return;
@@ -835,13 +835,14 @@ function filterNearby(){
   if(listEl){
     listEl.innerHTML=display.length?display.map(nbCardHtml).join(''):'<div class="mich-count">目前沒有符合的候選</div>';
   }
-  if(_nbGMap)updateNbMarkers(display);else initNbMap('nbmap',display);
+  if(_nbGMap)updateNbMarkers(display);else initNbMap('nbmap');
 }
 
-async function initNbMap(containerId,data){
+async function initNbMap(containerId){
   const el=document.getElementById(containerId);
   if(!el||el.offsetParent===null)return;
-  if(_nbGMap){updateNbMarkers(data);return;}
+  if(_nbGMap||_nbMapInit)return;   // 防止 race 重複建立地圖/地標
+  _nbMapInit=true;
   const {Map}=await google.maps.importLibrary('maps');
   _nbGMap=new Map(el,{center:{lat:13.7445,lng:100.5410},zoom:14,mapId:'DEMO_MAP_ID',streetViewControl:false,mapTypeControl:false,fullscreenControl:false});
   _maps[containerId]=_nbGMap;
@@ -865,7 +866,7 @@ async function initNbMap(containerId,data){
       alert('定位失敗：'+(err.code===1?'請允許位置存取權限':err.code===2?'無法取得位置':'定位逾時'));
     },{enableHighAccuracy:true,timeout:10000});
   });
-  updateNbMarkers(data);
+  filterNearby();
 }
 
 function _nbAddLandmarks(){
