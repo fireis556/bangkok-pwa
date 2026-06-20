@@ -120,4 +120,6 @@ function filterNearby(){
 
 ## 資料維護
 
-候選清單由使用者自行在 `NB_PLACES[]` 增修；必填 `name/cat/lat/lng`，選填 `area/note/pid`（加 `pid` 才有照片卡）。初版先放 6 個地標 + 幾個示範候選（從現有 `PLACES`/`MICHELIN_DATA` 挑選）讓功能可跑，後續替換。
+候選清單由使用者自行在 `NB_PLACES[]` 增修；必填 `name/cat/lat/lng`，選填 `area/note/pid`（加 `pid` 才有照片卡）。
+
+**重要原則：候選清單不放已在行程裡的餐廳/景點**，以「行程外的逛街選項」為主（供臨時不知去哪時就近挑選）。初版放 8 個行程外逛街商場（Siam Paragon／Siam Center／MBK／Platinum／Pratunam／Terminal 21／EmQuartier／Emporium）。地標（飯店/機場/大皇宮/鄭王廟/洽圖洽）維持在 `NB_LANDMARKS[]` 僅作地圖參考點。

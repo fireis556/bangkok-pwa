@@ -530,23 +530,17 @@ const NB_CATS={
   other: {emoji:'✨', label:'其他', color:'#c89b3c'},
 };
 // 候選清單（會進 500m 排序，可自行增修：必填 name/cat/lat/lng，選填 area/note/pid）
+// ⚠️ 不放已在行程裡的餐廳/景點；以「行程外的逛街選項」為主，供臨時不知去哪時就近挑選
 const NB_PLACES=[
-  // 吃飯
-  {name:'Savoey 泰式海鮮',cat:'food',lat:13.7440,lng:100.5437,area:'Chit Lom',note:'泰式海鮮 Mercury Ville 2F'},
-  {name:'Somboon Seafood（Central Embassy）',cat:'food',lat:13.7442,lng:100.5465,area:'Phloen Chit',note:'咖哩蟹名店 5F',pid:'ChIJebESl9ye4jARCgEOf0ddpLc'},
-  {name:'Nara Thai（CentralWorld）',cat:'food',lat:13.7466,lng:100.5396,area:'Ratchadamri',note:'Michelin Guide 泰菜 7F'},
-  {name:'Eathai（Central Embassy）',cat:'food',lat:13.7440,lng:100.5470,area:'Phloen Chit',note:'泰式美食街 LG',pid:'ChIJ17TfAdme4jARiI8BOLODlOE'},
-  // 逛街
-  {name:'CentralWorld',cat:'shop',lat:13.7466,lng:100.5392,area:'Ratchadamri',note:'大型商場 10:00-22:00'},
-  {name:'Gaysorn Amarin',cat:'shop',lat:13.7445,lng:100.5420,area:'Chit Lom',note:'商場 10:00-21:00',pid:'ChIJ07E2m9qe4jARNi0un-C7wbw'},
-  {name:'Central Embassy',cat:'shop',lat:13.7445,lng:100.5468,area:'Phloen Chit',note:'精品商場 10:00-22:00',pid:'ChIJz_aVZ9ue4jAR9mXCLXqZstw'},
-  {name:'ICONSIAM',cat:'shop',lat:13.7268,lng:100.5100,area:'Khlong San',note:'河岸大型商場',pid:'ChIJFRjwgc2Z4jAR9JIadoa9YBY'},
-  // 景點
-  {name:'Erawan 四面佛',cat:'spot',lat:13.7441,lng:100.5406,area:'Chit Lom',note:'四面佛 免費 06:00-22:00'},
-  {name:'臥佛寺',cat:'spot',lat:13.7465,lng:100.4930,area:'老城',note:'門票 ฿300 ｜46m 臥佛',pid:'ChIJgcxFcQWZ4jARLsIR9Qia9H0'},
-  // 其他（按摩/酒吧/咖啡）
-  {name:"Let's Relax（CentralWorld）",cat:'other',lat:13.7466,lng:100.5392,area:'Ratchadamri',note:'💆 足底 60min ฿800',pid:'ChIJxdzDHHuf4jAR_5nQztkr9Nk'},
-  {name:'Red Sky Bar',cat:'other',lat:13.7470,lng:100.5395,area:'Ratchadamri',note:'🍸 55-56F 高空酒吧',pid:'ChIJaWYJu8-e4jARCqFsNRnGKxo'},
+  // 逛街（皆非行程內地點）
+  {name:'Siam Paragon',cat:'shop',lat:13.7462,lng:100.5347,area:'Siam',note:'大型購物中心 10:00-22:00'},
+  {name:'Siam Center',cat:'shop',lat:13.7462,lng:100.5316,area:'Siam',note:'潮流設計品牌 10:00-22:00'},
+  {name:'MBK Center',cat:'shop',lat:13.7444,lng:100.5299,area:'Siam',note:'平價購物商城 10:00-22:00'},
+  {name:'Platinum Fashion Mall',cat:'shop',lat:13.7503,lng:100.5403,area:'Pratunam',note:'成衣批發商場'},
+  {name:'Pratunam Market',cat:'shop',lat:13.7513,lng:100.5405,area:'Pratunam',note:'水門市場 服飾'},
+  {name:'Terminal 21（Asok）',cat:'shop',lat:13.7376,lng:100.5601,area:'Asok',note:'主題購物中心 10:00-22:00'},
+  {name:'EmQuartier',cat:'shop',lat:13.7303,lng:100.5697,area:'Phrom Phong',note:'精品商場 10:00-22:00'},
+  {name:'Emporium',cat:'shop',lat:13.7298,lng:100.5694,area:'Phrom Phong',note:'百貨商場 10:00-22:00'},
 ];
 // 地標錨點（只在地圖當參考，不進清單、不參與 500m 判定）
 const NB_LANDMARKS=[
