@@ -257,6 +257,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .map-crosshair{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:999;pointer-events:none;font-size:28px;filter:drop-shadow(0 1px 3px rgba(0,0,0,.4));transition:opacity .2s}
 .map-confirm-btn{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);z-index:1000;padding:6px 20px;border-radius:20px;border:none;background:var(--accent);color:#fff;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.25);transition:opacity .2s}
 .map-confirm-btn:active{opacity:.7}
+.nb-landmark{display:flex;align-items:center;gap:3px;font-size:11px;font-weight:600;color:#555;background:rgba(255,255,255,.92);border:1px solid rgba(0,0,0,.18);border-radius:12px;padding:2px 8px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.nb-card{cursor:pointer}
 .place-award-row{display:flex;align-items:center;gap:8px;padding:10px 0 12px;border-bottom:1px solid var(--border);margin-bottom:12px}
 .place-award-meta{font-size:12px;color:var(--text-light)}
 gmpx-place-overview{display:block;width:100%}
@@ -520,6 +522,42 @@ const MICHELIN_DATA=[
 const MICH_ALL_CUISINE_GROUPS={thai:'🇹🇭 泰式',european:'🇪🇺 歐式',chinese:'🇨🇳 中式',street:'🍜 小吃',noodles:'🍜 麵食',vietnamese:'🇻🇳 越南',seafood:'🦐 海鮮'};
 const MICH_AWARD_LABELS={'1 Star':'⭐ 一星','Bib Gourmand':'🍽 必比登','Selected Restaurants':'📋 推薦'};
 
+/* ── Nearby（附近吃逛）── */
+const NB_CATS={
+  food:  {emoji:'🍽️', label:'吃飯', color:'#ff9500'},
+  shop:  {emoji:'🛒', label:'逛街', color:'#34c759'},
+  spot:  {emoji:'📷', label:'景點', color:'#5ac8fa'},
+  other: {emoji:'✨', label:'其他', color:'#c89b3c'},
+};
+// 候選清單（會進 500m 排序，可自行增修：必填 name/cat/lat/lng，選填 area/note/pid）
+const NB_PLACES=[
+  // 吃飯
+  {name:'Savoey 泰式海鮮',cat:'food',lat:13.7440,lng:100.5437,area:'Chit Lom',note:'泰式海鮮 Mercury Ville 2F'},
+  {name:'Somboon Seafood（Central Embassy）',cat:'food',lat:13.7442,lng:100.5465,area:'Phloen Chit',note:'咖哩蟹名店 5F',pid:'ChIJebESl9ye4jARCgEOf0ddpLc'},
+  {name:'Nara Thai（CentralWorld）',cat:'food',lat:13.7466,lng:100.5396,area:'Ratchadamri',note:'Michelin Guide 泰菜 7F'},
+  {name:'Eathai（Central Embassy）',cat:'food',lat:13.7440,lng:100.5470,area:'Phloen Chit',note:'泰式美食街 LG',pid:'ChIJ17TfAdme4jARiI8BOLODlOE'},
+  // 逛街
+  {name:'CentralWorld',cat:'shop',lat:13.7466,lng:100.5392,area:'Ratchadamri',note:'大型商場 10:00-22:00'},
+  {name:'Gaysorn Amarin',cat:'shop',lat:13.7445,lng:100.5420,area:'Chit Lom',note:'商場 10:00-21:00',pid:'ChIJ07E2m9qe4jARNi0un-C7wbw'},
+  {name:'Central Embassy',cat:'shop',lat:13.7445,lng:100.5468,area:'Phloen Chit',note:'精品商場 10:00-22:00',pid:'ChIJz_aVZ9ue4jAR9mXCLXqZstw'},
+  {name:'ICONSIAM',cat:'shop',lat:13.7268,lng:100.5100,area:'Khlong San',note:'河岸大型商場',pid:'ChIJFRjwgc2Z4jAR9JIadoa9YBY'},
+  // 景點
+  {name:'Erawan 四面佛',cat:'spot',lat:13.7441,lng:100.5406,area:'Chit Lom',note:'四面佛 免費 06:00-22:00'},
+  {name:'臥佛寺',cat:'spot',lat:13.7465,lng:100.4930,area:'老城',note:'門票 ฿300 ｜46m 臥佛',pid:'ChIJgcxFcQWZ4jARLsIR9Qia9H0'},
+  // 其他（按摩/酒吧/咖啡）
+  {name:"Let's Relax（CentralWorld）",cat:'other',lat:13.7466,lng:100.5392,area:'Ratchadamri',note:'💆 足底 60min ฿800',pid:'ChIJxdzDHHuf4jAR_5nQztkr9Nk'},
+  {name:'Red Sky Bar',cat:'other',lat:13.7470,lng:100.5395,area:'Ratchadamri',note:'🍸 55-56F 高空酒吧',pid:'ChIJaWYJu8-e4jARCqFsNRnGKxo'},
+];
+// 地標錨點（只在地圖當參考，不進清單、不參與 500m 判定）
+const NB_LANDMARKS=[
+  {name:'素萬那普機場',emoji:'✈️',lat:13.6900,lng:100.7501},
+  {name:'大皇宮',emoji:'🏛',lat:13.7500,lng:100.4914},
+  {name:'鄭王廟',emoji:'⛩',lat:13.7437,lng:100.4888},
+  {name:'洽圖洽市集',emoji:'🛍',lat:13.7999,lng:100.5509},
+  {name:'Prestige 飯店',emoji:'🏨',lat:13.7413,lng:100.5390},
+  {name:'Kimpton 飯店',emoji:'🏨',lat:13.7376,lng:100.5435},
+];
+
 /* ── Michelin helpers ── */
 let _michUserPos=null;
 let _michActiveDistrict='pathum_wan';
@@ -740,6 +778,147 @@ async function updateMichMarkers(data){
   if(data.length>1)_michGMap.fitBounds(bounds,{top:25,right:25,bottom:25,left:25});
   else if(data.length===1){_michGMap.setCenter({lat:data[0].lat,lng:data[0].lng});_michGMap.setZoom(15);}
   else{_michGMap.setCenter(dc);_michGMap.setZoom(14);}
+}
+
+/* ── Nearby helpers ── */
+let _nbUserPos=null;
+let _nbActiveCats=new Set();
+let _nbGMap=null,_nbMarkers=[],_nbLandmarkMarkers=[],_nbLocMarker=null,_nbLocCircle=null,_nbRangeCircle=null;
+
+function nbRequestLocation(){
+  if(!navigator.geolocation)return;
+  navigator.geolocation.getCurrentPosition(pos=>{
+    _nbUserPos={lat:pos.coords.latitude,lng:pos.coords.longitude};
+    if(_nbGMap){_nbRemoveLoc();_nbAddLoc(_nbUserPos.lat,_nbUserPos.lng);_nbGMap.setCenter(_nbUserPos);_nbGMap.setZoom(15);}
+    filterNearby();
+  },()=>{},{enableHighAccuracy:true,timeout:10000});
+}
+
+function renderNbFilters(){
+  const el=document.getElementById('day0');if(!el)return;
+  const container=el.querySelector('.nb-filters-container');if(!container)return;
+  let h='<div class="mich-filters"><div class="mich-filter-row"><span class="mich-filter-label">分類</span>';
+  Object.entries(NB_CATS).forEach(([k,v])=>{h+=`<button class="mich-pill${_nbActiveCats.has(k)?' on':''}" data-cat="${k}">${v.emoji} ${v.label}</button>`;});
+  h+='</div></div>';
+  container.innerHTML=h;
+  container.querySelectorAll('.mich-pill').forEach(pill=>{
+    pill.addEventListener('click',()=>{
+      pill.classList.toggle('on');
+      if(pill.classList.contains('on'))_nbActiveCats.add(pill.dataset.cat);
+      else _nbActiveCats.delete(pill.dataset.cat);
+      filterNearby();
+    });
+  });
+}
+
+function nbCardHtml(p){
+  const cat=NB_CATS[p.cat]||NB_CATS.other;
+  const distBadge=(p._d!=null)?`<span style="color:var(--accent);font-weight:700">📍 ${fmtDist(p._d)}</span>`:'';
+  const meta=[cat.label];if(p.area)meta.push(p.area);
+  const navUrl=p.pid?`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(p.name)}&query_place_id=${p.pid}`:mapUrl(p.name+' Bangkok');
+  return `<div class="mich-card nb-card"${p.pid?` data-pid="${p.pid}" data-name="${p.name.replace(/"/g,'&quot;')}"`:''}>
+    <div class="mich-card-head"><span class="mich-card-name">${cat.emoji} ${p.name}</span>${distBadge}</div>
+    <div class="mich-card-meta">${meta.map(m=>`<span>${m}</span>`).join('')}</div>
+    ${p.note?`<div class="mich-card-desc">${p.note}</div>`:''}
+    <a class="mich-card-nav" href="${navUrl}" target="_blank" rel="noopener">📍 Google Maps</a>
+  </div>`;
+}
+
+function filterNearby(){
+  const el=document.getElementById('day0');if(!el)return;
+  let list=NB_PLACES.filter(p=>_nbActiveCats.size===0||_nbActiveCats.has(p.cat));
+  const listEl=el.querySelector('.nb-list');
+  const countEl=el.querySelector('.nb-count');
+  let display=list;
+  if(!_nbUserPos){
+    if(countEl)countEl.textContent='按 🧑 定位，列出 500m 內的候選';
+  }else{
+    list=list.map(p=>({...p,_d:haversine(_nbUserPos.lat,_nbUserPos.lng,p.lat,p.lng)})).sort((a,b)=>a._d-b._d);
+    const within=list.filter(p=>p._d<=500);
+    if(within.length){display=within;if(countEl)countEl.textContent=`📍 500m 內 ${within.length} 個 · 依距離排序`;}
+    else{display=list.slice(0,5);if(countEl)countEl.textContent='⚠️ 500m 內無候選 · 以下為最近 5 個';}
+  }
+  if(listEl){
+    listEl.innerHTML=display.length?display.map(nbCardHtml).join(''):'<div class="mich-count">目前沒有符合的候選</div>';
+  }
+  if(_nbGMap)updateNbMarkers(display);else initNbMap('nbmap',display);
+}
+
+async function initNbMap(containerId,data){
+  const el=document.getElementById(containerId);
+  if(!el||el.offsetParent===null)return;
+  if(_nbGMap){updateNbMarkers(data);return;}
+  const {Map}=await google.maps.importLibrary('maps');
+  _nbGMap=new Map(el,{center:{lat:13.7445,lng:100.5410},zoom:14,mapId:'DEMO_MAP_ID',streetViewControl:false,mapTypeControl:false,fullscreenControl:false});
+  _maps[containerId]=_nbGMap;
+  _nbAddLandmarks();
+  if(_nbUserPos)_nbAddLoc(_nbUserPos.lat,_nbUserPos.lng);
+  el.style.position='relative';
+  const locBtn=document.createElement('button');
+  locBtn.className='map-locate-btn';locBtn.innerHTML='🧑';locBtn.title='我在哪裡';
+  el.appendChild(locBtn);
+  locBtn.addEventListener('click',()=>{
+    if(!navigator.geolocation){alert('你的瀏覽器不支援定位');return;}
+    locBtn.classList.add('locating');
+    navigator.geolocation.getCurrentPosition(pos=>{
+      locBtn.classList.remove('locating');
+      const {latitude:lat,longitude:lng,accuracy:acc}=pos.coords;
+      _nbUserPos={lat,lng};
+      _nbRemoveLoc();_nbAddLoc(lat,lng,acc);
+      _nbGMap.setCenter({lat,lng});_nbGMap.setZoom(15);
+      filterNearby();
+    },err=>{
+      locBtn.classList.remove('locating');
+      alert('定位失敗：'+(err.code===1?'請允許位置存取權限':err.code===2?'無法取得位置':'定位逾時'));
+    },{enableHighAccuracy:true,timeout:10000});
+  });
+  updateNbMarkers(data);
+}
+
+function _nbAddLandmarks(){
+  google.maps.importLibrary('marker').then(({AdvancedMarkerElement})=>{
+    NB_LANDMARKS.forEach(l=>{
+      const d=document.createElement('div');d.className='nb-landmark';d.textContent=`${l.emoji} ${l.name}`;
+      const m=new AdvancedMarkerElement({map:_nbGMap,position:{lat:l.lat,lng:l.lng},content:d,title:l.name});
+      m.addListener('click',()=>window.open(mapUrl(l.name+' Bangkok'),'_blank','noopener'));
+      _nbLandmarkMarkers.push(m);
+    });
+  });
+}
+
+function _nbAddLoc(lat,lng,acc){
+  google.maps.importLibrary('marker').then(({AdvancedMarkerElement})=>{
+    const dot=document.createElement('div');dot.className='gm-loc-dot';
+    _nbLocMarker=new AdvancedMarkerElement({map:_nbGMap,position:{lat,lng},content:dot,title:'📍 你在這裡'});
+  });
+  google.maps.importLibrary('maps').then(({Circle})=>{
+    if(acc)_nbLocCircle=new Circle({map:_nbGMap,center:{lat,lng},radius:acc,strokeColor:'#007aff',strokeOpacity:.8,strokeWeight:1,fillColor:'#007aff',fillOpacity:.1});
+    _nbRangeCircle=new Circle({map:_nbGMap,center:{lat,lng},radius:500,strokeColor:'#c89b3c',strokeOpacity:.9,strokeWeight:2,fillColor:'#c89b3c',fillOpacity:.06});
+  });
+}
+function _nbRemoveLoc(){
+  if(_nbLocMarker){_nbLocMarker.map=null;_nbLocMarker=null;}
+  if(_nbLocCircle){_nbLocCircle.setMap(null);_nbLocCircle=null;}
+  if(_nbRangeCircle){_nbRangeCircle.setMap(null);_nbRangeCircle=null;}
+}
+
+async function updateNbMarkers(data){
+  if(!_nbGMap)return;
+  _nbMarkers.forEach(m=>m.map=null);_nbMarkers=[];
+  const {AdvancedMarkerElement,PinElement}=await google.maps.importLibrary('marker');
+  const bounds=new google.maps.LatLngBounds();
+  data.forEach(p=>{
+    const cat=NB_CATS[p.cat]||NB_CATS.other;
+    const pin=new PinElement({background:cat.color,borderColor:'#ffffff',glyphColor:'#ffffff',scale:0.9});
+    const marker=new AdvancedMarkerElement({map:_nbGMap,position:{lat:p.lat,lng:p.lng},title:p.name,content:pin,gmpClickable:true});
+    onMarkerTap(marker,()=>{ if(p.pid){showPlaceCard(p.pid,p.name,null);}else{window.open(mapUrl(p.name+' Bangkok'),'_blank','noopener');} });
+    _nbMarkers.push(marker);
+    bounds.extend({lat:p.lat,lng:p.lng});
+  });
+  if(_nbUserPos)bounds.extend(_nbUserPos);
+  if(_nbUserPos&&data.length)_nbGMap.fitBounds(bounds,{top:40,right:40,bottom:40,left:40});
+  else if(data.length>1)_nbGMap.fitBounds(bounds,{top:25,right:25,bottom:25,left:25});
+  else if(data.length===1){_nbGMap.setCenter({lat:data[0].lat,lng:data[0].lng});_nbGMap.setZoom(15);}
 }
 
 function mapLegendHtml(){
@@ -1119,9 +1298,12 @@ function render(){
       dv.querySelectorAll('.tab-section').forEach(s=>s.classList.toggle('active',s.dataset.section===sec));
       // Init michelin map when switching to michelin tab
       if(sec==='michelin'){setTimeout(()=>{renderMichFilters();filterMichelin();michRequestLocation();},100);}
+      if(sec==='nearby'){setTimeout(()=>{renderNbFilters();filterNearby();nbRequestLocation();},100);}
       return;
     }
     if(e.target.closest('a'))return;
+    const nbCard=e.target.closest('.nb-card');
+    if(nbCard&&nbCard.dataset.pid){showPlaceCard(nbCard.dataset.pid,nbCard.dataset.name,null);return;}
     const badge=e.target.closest('.badge');
     if(badge){const card=badge.closest('[data-day]');if(card){const day=+card.dataset.day,idx=+card.dataset.idx;const it=DAYS.find(d=>d.day===day).items[idx];if(it&&it.alts)openSheet(it.alts,it.a);}return;}
     const exp=e.target.closest('.card-expandable');
@@ -1192,6 +1374,7 @@ function renderDashboard(){
   html+='<div class="day-subtab" data-subtab="calc">💱 匯率</div>';
   html+='<div class="day-subtab" data-subtab="translate">🔤 翻譯</div>';
   html+='<div class="day-subtab" data-subtab="michelin">🍽 米其林</div>';
+  html+='<div class="day-subtab" data-subtab="nearby">🧭 附近</div>';
   html+='</div>';
 
   // Warns
@@ -1259,6 +1442,19 @@ function renderDashboard(){
   michHtml+=`<div class="mich-count">顯示 ${initData.length} / ${initData.length} 間</div>`;
   michHtml+='<div class="mich-list"></div></div>';
   html+=`<div class="tab-section" data-section="michelin">${michHtml}</div>`;
+
+  // Nearby section
+  let nbHtml='<div class="dash-section"><h3>🧭 附近吃逛</h3>';
+  nbHtml+='<p style="font-size:12px;color:var(--text-light);margin-bottom:10px">按地圖右下 🧑 定位，列出 500m 內的候選（吃飯／逛街／景點／其他）</p>';
+  nbHtml+='<div class="nb-filters-container"></div>';
+  nbHtml+='<div class="map-legend" style="margin-bottom:8px">';
+  Object.values(NB_CATS).forEach(c=>{nbHtml+=`<div class="map-legend-item"><div class="map-legend-dot" style="background:${c.color}"></div>${c.label}</div>`;});
+  nbHtml+='<div class="map-legend-item">◇ 地標</div>';
+  nbHtml+='</div>';
+  nbHtml+='<div class="map-wrap"><div class="map-lg" id="nbmap"></div></div>';
+  nbHtml+='<div class="nb-count">按 🧑 定位，列出 500m 內的候選</div>';
+  nbHtml+='<div class="nb-list"></div></div>';
+  html+=`<div class="tab-section" data-section="nearby">${nbHtml}</div>`;
 
   el.innerHTML=html;
   document.getElementById('calc-thb').addEventListener('input',calcFromThb);
