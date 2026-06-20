@@ -101,7 +101,7 @@ function filterNearby(){
 - **地標錨點**：`AdvancedMarkerElement` + 自訂 content（半透明灰底圓角膠囊 + emoji），視覺上刻意異於候選；點擊直接開 Google Maps。
 - **你的位置**：`gm-loc-dot` 藍點 + 精度圈 + 半徑 500m 金色圈（`--accent`）。
 - **重繪**：`updateNbMarkers(list)` 只重畫候選 marker；地標 marker 初始化畫一次後不動；切換分類只變候選。
-- **fitBounds**：定位後框住「你的位置 + 要顯示的候選」。
+- **fitBounds**：永遠框住「你的位置 + 要顯示的候選 + **所有地標**」，定位後不縮到只剩 500m，確保飯店/機場/大皇宮/鄭王廟/洽圖洽始終在畫面內可判斷方位。
 
 ## 程式碼整合點（皆在 `index.html`）
 

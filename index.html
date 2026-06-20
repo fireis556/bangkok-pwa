@@ -783,7 +783,7 @@ function nbRequestLocation(){
   if(!navigator.geolocation)return;
   navigator.geolocation.getCurrentPosition(pos=>{
     _nbUserPos={lat:pos.coords.latitude,lng:pos.coords.longitude};
-    if(_nbGMap){_nbRemoveLoc();_nbAddLoc(_nbUserPos.lat,_nbUserPos.lng);_nbGMap.setCenter(_nbUserPos);_nbGMap.setZoom(15);}
+    if(_nbGMap){_nbRemoveLoc();_nbAddLoc(_nbUserPos.lat,_nbUserPos.lng);}
     filterNearby();
   },()=>{},{enableHighAccuracy:true,timeout:10000});
 }
@@ -859,7 +859,6 @@ async function initNbMap(containerId,data){
       const {latitude:lat,longitude:lng,accuracy:acc}=pos.coords;
       _nbUserPos={lat,lng};
       _nbRemoveLoc();_nbAddLoc(lat,lng,acc);
-      _nbGMap.setCenter({lat,lng});_nbGMap.setZoom(15);
       filterNearby();
     },err=>{
       locBtn.classList.remove('locating');
@@ -910,9 +909,9 @@ async function updateNbMarkers(data){
     bounds.extend({lat:p.lat,lng:p.lng});
   });
   if(_nbUserPos)bounds.extend(_nbUserPos);
-  if(_nbUserPos&&data.length)_nbGMap.fitBounds(bounds,{top:40,right:40,bottom:40,left:40});
-  else if(data.length>1)_nbGMap.fitBounds(bounds,{top:25,right:25,bottom:25,left:25});
-  else if(data.length===1){_nbGMap.setCenter({lat:data[0].lat,lng:data[0].lng});_nbGMap.setZoom(15);}
+  // 始終把所有地標納入視野，定位後也看得到方位（飯店/機場/大皇宮/鄭王廟/洽圖洽）
+  NB_LANDMARKS.forEach(l=>bounds.extend({lat:l.lat,lng:l.lng}));
+  if(!bounds.isEmpty())_nbGMap.fitBounds(bounds,{top:30,right:30,bottom:30,left:30});
 }
 
 function mapLegendHtml(){
