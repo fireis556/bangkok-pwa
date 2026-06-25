@@ -179,6 +179,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .dash-section h3{font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px}
 .dash-warn{font-size:12px;color:#b85c00;background:#fff8ef;border-left:3px solid #f0a030;padding:6px 10px;margin-bottom:6px;border-radius:0 8px 8px 0;line-height:1.5}
 .dash-warn:last-child{margin-bottom:0}
+.warn-group-title{font-size:11.5px;font-weight:700;color:#c89b3c;margin:14px 0 6px;letter-spacing:.5px}
+.warn-group-title:first-of-type{margin-top:4px}
 .dash-table{width:100%;font-size:12px;border-collapse:collapse}
 .dash-table td{padding:4px 0}
 .dash-table td:last-child{text-align:right;font-family:'SF Mono',Menlo,'Courier New',monospace;font-size:11.5px;white-space:nowrap}
@@ -278,12 +280,24 @@ gmpx-place-overview{display:block;width:100%}
 
 <script>
 const GLOBAL_WARNS = [
-  "護照效期需 6 個月以上",
-  "⚠️ TDAC 入境卡：2026/05 起強制，全員出發前 72hr 內線上填 tdac.immigration.go.th（免費，否則被擋查驗台）",
-  "七月為雨季，午後常有雷陣雨，隨身帶雨具",
-  "必載 App：Grab（叫車）、Google Maps、LINE",
-  "BTS 可購 Rabbit Card｜MRT 買單程票即可",
-  "不吃辣通用句：ไม่เผ็ดนะครับ/ค่ะ（不要辣）"
+  {g:"📋 出發前必辦", items:[
+    "護照效期需 6 個月以上",
+    "⚠️ TDAC 入境卡：全員出發前 72hr 內線上填 tdac.immigration.go.th（免費，沒填會被擋查驗台）",
+    "⚠️ 大皇宮國喪期：出發前 1–2 週致電 +66-2-623-5500 確認 07/21（Day4）是否開放，備 Plan B",
+    "訂位／購票（熱門易滿，提早辦）：泰拳 RWS（muaytix）、Divana SPA（提前 7 天）、Savoey／Somboon／Baannok"
+  ]},
+  {g:"🌧 全程通用", items:[
+    "7 月雨季，午後常有雷陣雨，隨身帶傘",
+    "必載 App：Grab（叫車）、Google Maps、LINE",
+    "交通：BTS 用 Rabbit Card、MRT 買單程票；5 人帶行李叫廂型車／GrabCar XL",
+    "不吃辣點餐通用句：ไม่เผ็ด（mai phet）"
+  ]},
+  {g:"🚨 安全與避雷", items:[
+    "寺廟服裝規範：遮肩＋過膝＋包腳趾鞋",
+    "Red Sky 高空酒吧：smart casual（禁短褲/拖鞋/背心）、未滿 20 歲禁入",
+    "計程車陷阱：大皇宮門口常拒跳表／謊稱關門，一律走離入口用 Grab",
+    "夜歸：觀光船／捷運末班較早，晚歸改 Grab 最穩"
+  ]}
 ];
 const FALLBACK_RATE = 0.92;
 
@@ -1379,8 +1393,10 @@ function renderDashboard(){
 
   // Warns
   let warns='<div class="dash-section"><h3>⚠️ 注意事項</h3>';
-  GLOBAL_WARNS.forEach(w=>warns+=`<div class="dash-warn">${w}</div>`);
-  DAYS.forEach(d=>d.warns.forEach(w=>warns+=`<div class="dash-warn">Day ${d.day}：${w}</div>`));
+  GLOBAL_WARNS.forEach(grp=>{
+    warns+=`<div class="warn-group-title">${grp.g}</div>`;
+    grp.items.forEach(w=>warns+=`<div class="dash-warn">${w}</div>`);
+  });
   warns+='</div>';
   html+=`<div class="tab-section active" data-section="warns">${warns}</div>`;
 
