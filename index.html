@@ -866,17 +866,18 @@ function filterNearby(){
   let list=NB_PLACES.filter(p=>_nbActiveCats.size===0||_nbActiveCats.has(p.cat));
   const listEl=el.querySelector('.nb-list');
   const countEl=el.querySelector('.nb-count');
-  let display=list;
   const hotel=_nbLocMode==='hotel';
   const tag=hotel?'🏨 以第一天飯店為中心':'📍 你的定位';
   list=list.map(p=>({...p,_d:haversine(_nbUserPos.lat,_nbUserPos.lng,p.lat,p.lng)})).sort((a,b)=>a._d-b._d);
-  const within=list.filter(p=>p._d<=500);
-  if(within.length){display=within;if(countEl)countEl.textContent=`${tag} · 500m 內 ${within.length} 個 · 依距離排序`;}
-  else{display=list.slice(0,5);if(countEl)countEl.textContent=`${tag} · 500m 內無候選 · 以下為最近 5 個`;}
+  const within=list.filter(p=>p._d<=500).length;
+  // 清單全列、依距離由近到遠遞增；500m 內有幾個只在文案附註
+  if(countEl)countEl.textContent=`${tag} · 共 ${list.length} 個 · 依距離排序${within?`（500m 內 ${within} 個）`:''}`;
   if(listEl){
-    listEl.innerHTML=display.length?display.map(nbCardHtml).join(''):'<div class="mich-count">目前沒有符合的候選</div>';
+    listEl.innerHTML=list.length?list.map(nbCardHtml).join(''):'<div class="mich-count">目前沒有符合的候選</div>';
   }
-  if(_nbGMap)updateNbMarkers(display);else initNbMap('nbmap');
+  // 地圖視野只框最近 5 個＋定位，避免遠處候選（唐人街/Bang Na）把畫面拉到縮太遠
+  const fit=list.slice(0,5);
+  if(_nbGMap)updateNbMarkers(list,fit);else initNbMap('nbmap');
 }
 
 async function initNbMap(containerId){
@@ -933,21 +934,21 @@ function _nbRemoveLoc(){
   if(_nbRangeCircle){_nbRangeCircle.setMap(null);_nbRangeCircle=null;}
 }
 
-async function updateNbMarkers(data){
+async function updateNbMarkers(data,fitData){
   if(!_nbGMap)return;
   _nbMarkers.forEach(m=>m.map=null);_nbMarkers=[];
   const {AdvancedMarkerElement,PinElement}=await google.maps.importLibrary('marker');
-  const bounds=new google.maps.LatLngBounds();
   data.forEach(p=>{
     const cat=NB_CATS[p.cat]||NB_CATS.other;
     const pin=new PinElement({background:cat.color,borderColor:'#ffffff',glyphColor:'#ffffff',scale:0.9});
     const marker=new AdvancedMarkerElement({map:_nbGMap,position:{lat:p.lat,lng:p.lng},title:p.name,content:pin,gmpClickable:true});
     onMarkerTap(marker,()=>{ if(p.pid){showPlaceCard(p.pid,p.name,null);}else{window.open(mapUrl(p.name+' Bangkok'),'_blank','noopener');} });
     _nbMarkers.push(marker);
-    bounds.extend({lat:p.lat,lng:p.lng});
   });
+  // 全部候選都插 pin，但視野只框最近幾個（fitData）＋定位，避免遠處候選把畫面拉到縮太遠
+  const bounds=new google.maps.LatLngBounds();
+  (fitData&&fitData.length?fitData:data).forEach(p=>bounds.extend({lat:p.lat,lng:p.lng}));
   if(_nbUserPos)bounds.extend(_nbUserPos);
-  // 只框「目前定位＋候選點」，不再把遠處地標（如機場）一起塞進視野以免縮太遠
   if(!bounds.isEmpty())_nbGMap.fitBounds(bounds,{top:40,right:40,bottom:40,left:40});
 }
 
