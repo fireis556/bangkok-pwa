@@ -232,6 +232,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Ro
 .map-locate-btn{position:absolute;bottom:10px;right:10px;z-index:1000;width:36px;height:36px;border-radius:50%;background:#fff;border:2px solid rgba(0,0,0,.15);box-shadow:0 2px 6px rgba(0,0,0,.2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;transition:background .2s}
 .map-locate-btn:active{background:#e8e8e8}
 .map-locate-btn.locating{animation:pulse-locate 1s ease infinite}
+.map-locate-btn.map-hotel-btn{bottom:54px}
+.map-locate-btn.active{border-color:var(--accent);box-shadow:0 0 0 2px rgba(200,155,60,.35),0 2px 6px rgba(0,0,0,.2)}
+.nb-hotel-pin{display:flex;align-items:center;gap:3px;font-size:12px;font-weight:700;color:#fff;background:var(--accent);border:2px solid #fff;border-radius:13px;padding:2px 9px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.35)}
 @keyframes pulse-locate{0%,100%{box-shadow:0 2px 6px rgba(0,0,0,.2)}50%{box-shadow:0 2px 12px rgba(0,122,255,.5)}}
 .gm-loc-dot{width:14px;height:14px;border-radius:50%;background:#007aff;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3)}
 .mich-filters{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
@@ -799,17 +802,33 @@ async function updateMichMarkers(data){
 }
 
 /* ── Nearby helpers ── */
-let _nbUserPos=null;
+// 預設定位：人還沒到泰國時，以第一天飯店（Prestige）為中心，地圖/清單即可用
+const NB_DEFAULT_POS={lat:13.7413,lng:100.5390,name:'第一天飯店 Prestige'};
+let _nbUserPos={lat:NB_DEFAULT_POS.lat,lng:NB_DEFAULT_POS.lng};
+let _nbLocMode='hotel';   // 'hotel'=預設飯店定位 / 'gps'=使用者實際 GPS 定位
 let _nbActiveCats=new Set();
 let _nbGMap=null,_nbMapInit=false,_nbMarkers=[],_nbLandmarkMarkers=[],_nbLocMarker=null,_nbLocCircle=null,_nbRangeCircle=null;
 
-function nbRequestLocation(){
-  if(!navigator.geolocation)return;
+function nbSetLoc(lat,lng,mode,acc){
+  _nbUserPos={lat,lng};_nbLocMode=mode;
+  if(_nbGMap){_nbRemoveLoc();_nbAddLoc(lat,lng,acc,mode);}
+  filterNearby();
+}
+// 預設定位：第一天飯店（不需 GPS、不彈權限）
+function nbUseHotel(){nbSetLoc(NB_DEFAULT_POS.lat,NB_DEFAULT_POS.lng,'hotel');}
+// 實際 GPS 定位（人在泰國時用）；done() 於成功時回呼以同步按鈕狀態
+function nbUseGps(btn,done){
+  if(!navigator.geolocation){alert('你的瀏覽器不支援定位');return;}
+  if(btn)btn.classList.add('locating');
   navigator.geolocation.getCurrentPosition(pos=>{
-    _nbUserPos={lat:pos.coords.latitude,lng:pos.coords.longitude};
-    if(_nbGMap){_nbRemoveLoc();_nbAddLoc(_nbUserPos.lat,_nbUserPos.lng);}
-    filterNearby();
-  },()=>{},{enableHighAccuracy:true,timeout:10000});
+    if(btn)btn.classList.remove('locating');
+    const {latitude:lat,longitude:lng,accuracy:acc}=pos.coords;
+    nbSetLoc(lat,lng,'gps',acc);
+    if(done)done();
+  },err=>{
+    if(btn)btn.classList.remove('locating');
+    alert('定位失敗：'+(err.code===1?'請允許位置存取權限':err.code===2?'無法取得位置':'定位逾時'));
+  },{enableHighAccuracy:true,timeout:10000});
 }
 
 function renderNbFilters(){
@@ -848,14 +867,12 @@ function filterNearby(){
   const listEl=el.querySelector('.nb-list');
   const countEl=el.querySelector('.nb-count');
   let display=list;
-  if(!_nbUserPos){
-    if(countEl)countEl.textContent='按 🧑 定位，列出 500m 內的候選';
-  }else{
-    list=list.map(p=>({...p,_d:haversine(_nbUserPos.lat,_nbUserPos.lng,p.lat,p.lng)})).sort((a,b)=>a._d-b._d);
-    const within=list.filter(p=>p._d<=500);
-    if(within.length){display=within;if(countEl)countEl.textContent=`📍 500m 內 ${within.length} 個 · 依距離排序`;}
-    else{display=list.slice(0,5);if(countEl)countEl.textContent='⚠️ 500m 內無候選 · 以下為最近 5 個';}
-  }
+  const hotel=_nbLocMode==='hotel';
+  const tag=hotel?'🏨 以第一天飯店為中心':'📍 你的定位';
+  list=list.map(p=>({...p,_d:haversine(_nbUserPos.lat,_nbUserPos.lng,p.lat,p.lng)})).sort((a,b)=>a._d-b._d);
+  const within=list.filter(p=>p._d<=500);
+  if(within.length){display=within;if(countEl)countEl.textContent=`${tag} · 500m 內 ${within.length} 個 · 依距離排序`;}
+  else{display=list.slice(0,5);if(countEl)countEl.textContent=`${tag} · 500m 內無候選 · 以下為最近 5 個`;}
   if(listEl){
     listEl.innerHTML=display.length?display.map(nbCardHtml).join(''):'<div class="mich-count">目前沒有符合的候選</div>';
   }
@@ -868,28 +885,22 @@ async function initNbMap(containerId){
   if(_nbGMap||_nbMapInit)return;   // 防止 race 重複建立地圖/地標
   _nbMapInit=true;
   const {Map}=await google.maps.importLibrary('maps');
-  _nbGMap=new Map(el,{center:{lat:13.7445,lng:100.5410},zoom:14,mapId:'DEMO_MAP_ID',streetViewControl:false,mapTypeControl:false,fullscreenControl:false});
+  _nbGMap=new Map(el,{center:{lat:_nbUserPos.lat,lng:_nbUserPos.lng},zoom:15,mapId:'DEMO_MAP_ID',streetViewControl:false,mapTypeControl:false,fullscreenControl:false});
   _maps[containerId]=_nbGMap;
   _nbAddLandmarks();
-  if(_nbUserPos)_nbAddLoc(_nbUserPos.lat,_nbUserPos.lng);
+  _nbAddLoc(_nbUserPos.lat,_nbUserPos.lng,null,_nbLocMode);
   el.style.position='relative';
+  // 🏨 預設定位（第一天飯店）／🧑 我的 GPS 定位，兩顆可互相切換
+  const hotelBtn=document.createElement('button');
+  hotelBtn.className='map-locate-btn map-hotel-btn';hotelBtn.innerHTML='🏨';hotelBtn.title='預設定位：第一天飯店';
+  el.appendChild(hotelBtn);
   const locBtn=document.createElement('button');
-  locBtn.className='map-locate-btn';locBtn.innerHTML='🧑';locBtn.title='我在哪裡';
+  locBtn.className='map-locate-btn';locBtn.innerHTML='🧑';locBtn.title='我的 GPS 定位';
   el.appendChild(locBtn);
-  locBtn.addEventListener('click',()=>{
-    if(!navigator.geolocation){alert('你的瀏覽器不支援定位');return;}
-    locBtn.classList.add('locating');
-    navigator.geolocation.getCurrentPosition(pos=>{
-      locBtn.classList.remove('locating');
-      const {latitude:lat,longitude:lng,accuracy:acc}=pos.coords;
-      _nbUserPos={lat,lng};
-      _nbRemoveLoc();_nbAddLoc(lat,lng,acc);
-      filterNearby();
-    },err=>{
-      locBtn.classList.remove('locating');
-      alert('定位失敗：'+(err.code===1?'請允許位置存取權限':err.code===2?'無法取得位置':'定位逾時'));
-    },{enableHighAccuracy:true,timeout:10000});
-  });
+  const syncBtns=()=>{hotelBtn.classList.toggle('active',_nbLocMode==='hotel');locBtn.classList.toggle('active',_nbLocMode==='gps');};
+  syncBtns();
+  hotelBtn.addEventListener('click',()=>{nbUseHotel();_nbGMap.panTo({lat:_nbUserPos.lat,lng:_nbUserPos.lng});syncBtns();});
+  locBtn.addEventListener('click',()=>{nbUseGps(locBtn,syncBtns);});
   filterNearby();
 }
 
@@ -904,10 +915,12 @@ function _nbAddLandmarks(){
   });
 }
 
-function _nbAddLoc(lat,lng,acc){
+function _nbAddLoc(lat,lng,acc,mode){
   google.maps.importLibrary('marker').then(({AdvancedMarkerElement})=>{
-    const dot=document.createElement('div');dot.className='gm-loc-dot';
-    _nbLocMarker=new AdvancedMarkerElement({map:_nbGMap,position:{lat,lng},content:dot,title:'📍 你在這裡'});
+    let content;
+    if(mode==='hotel'){content=document.createElement('div');content.className='nb-hotel-pin';content.textContent='🏨 第一天飯店';}
+    else{content=document.createElement('div');content.className='gm-loc-dot';}
+    _nbLocMarker=new AdvancedMarkerElement({map:_nbGMap,position:{lat,lng},content,title:mode==='hotel'?'🏨 第一天飯店（預設定位）':'📍 你在這裡'});
   });
   google.maps.importLibrary('maps').then(({Circle})=>{
     if(acc)_nbLocCircle=new Circle({map:_nbGMap,center:{lat,lng},radius:acc,strokeColor:'#007aff',strokeOpacity:.8,strokeWeight:1,fillColor:'#007aff',fillOpacity:.1});
@@ -934,9 +947,8 @@ async function updateNbMarkers(data){
     bounds.extend({lat:p.lat,lng:p.lng});
   });
   if(_nbUserPos)bounds.extend(_nbUserPos);
-  // 始終把所有地標納入視野，定位後也看得到方位（飯店/機場/大皇宮/鄭王廟/洽圖洽）
-  NB_LANDMARKS.forEach(l=>bounds.extend({lat:l.lat,lng:l.lng}));
-  if(!bounds.isEmpty())_nbGMap.fitBounds(bounds,{top:30,right:30,bottom:30,left:30});
+  // 只框「目前定位＋候選點」，不再把遠處地標（如機場）一起塞進視野以免縮太遠
+  if(!bounds.isEmpty())_nbGMap.fitBounds(bounds,{top:40,right:40,bottom:40,left:40});
 }
 
 function mapLegendHtml(){
@@ -1316,7 +1328,7 @@ function render(){
       dv.querySelectorAll('.tab-section').forEach(s=>s.classList.toggle('active',s.dataset.section===sec));
       // Init michelin map when switching to michelin tab
       if(sec==='michelin'){setTimeout(()=>{renderMichFilters();filterMichelin();michRequestLocation();},100);}
-      if(sec==='nearby'){setTimeout(()=>{renderNbFilters();filterNearby();nbRequestLocation();},100);}
+      if(sec==='nearby'){setTimeout(()=>{renderNbFilters();filterNearby();},100);}
       return;
     }
     if(e.target.closest('a'))return;
@@ -1465,14 +1477,14 @@ function renderDashboard(){
 
   // Nearby section
   let nbHtml='<div class="dash-section"><h3>🧭 附近吃逛</h3>';
-  nbHtml+='<p style="font-size:12px;color:var(--text-light);margin-bottom:10px">按地圖右下 🧑 定位，列出 500m 內的候選（吃飯／逛街／景點／其他）</p>';
+  nbHtml+='<p style="font-size:12px;color:var(--text-light);margin-bottom:10px">預設以第一天飯店（🏨）為中心列出 500m 內候選；人到泰國後按 🧑 改用 GPS 實際定位（吃飯／逛街／景點／其他）</p>';
   nbHtml+='<div class="nb-filters-container"></div>';
   nbHtml+='<div class="map-legend" style="margin-bottom:8px">';
   Object.values(NB_CATS).forEach(c=>{nbHtml+=`<div class="map-legend-item"><div class="map-legend-dot" style="background:${c.color}"></div>${c.label}</div>`;});
   nbHtml+='<div class="map-legend-item">◇ 地標</div>';
   nbHtml+='</div>';
   nbHtml+='<div class="map-wrap"><div class="map-lg" id="nbmap"></div></div>';
-  nbHtml+='<div class="nb-count">按 🧑 定位，列出 500m 內的候選</div>';
+  nbHtml+='<div class="nb-count">🏨 預設以第一天飯店為中心 · 按 🧑 可改用你的 GPS 定位</div>';
   nbHtml+='<div class="nb-list"></div></div>';
   html+=`<div class="tab-section" data-section="nearby">${nbHtml}</div>`;
 
