@@ -306,27 +306,27 @@ const FALLBACK_RATE = 0.92;
 
 const DAYS = [
   {
-    day:1, date:"07/18（六）", title:"抵達＋週六 RWS 泰拳",
+    day:1, date:"07/18（六）", title:"抵達＋唐人街夜遊",
     hotel:"Grande Centre Point Prestige Bangkok",
-    warns:["⚠️ 全員出發前 72hr 內須線上填 TDAC 入境卡（tdac.immigration.go.th，免費）","機場→飯店建議叫 1 台廂型車（Toyota Commuter／GrabCar XL），標準計程車塞不下 5 人＋行李","⭐ RWS 旗艦泰拳建議線上先購票（muaytix，Ringside/Club 常提前數週售完）｜Savoey 提前訂位"],
+    warns:["⚠️ 全員出發前 72hr 內須線上填 TDAC 入境卡（tdac.immigration.go.th，免費）","機場→飯店建議叫 1 台廂型車（Toyota Commuter／GrabCar XL），標準計程車塞不下 5 人＋行李","Savoey 提前訂位（086-341-8472）｜唐人街 Yaowarat 露天夜遊：備小額現金與雨傘、只逛主街一小段、長輩找店家坐著休息"],
     items:[
       {t:"12:10~13:45",a:"✈ 抵達 BKK＋入境＋提行李",n:"CI831 12:10 落地｜入境查驗（須已填 TDAC）＋提行李，出關約 13:30~13:45",from:"BKK 機場",to:"出境大廳",dur:"約80~95分",tags:["TDAC 必填"]},
       {t:"13:45~14:45",a:"🚕 廂型車前往飯店",n:"叫 1 台 Toyota Commuter／GrabCar XL 直達｜週六午後＋雨季保守抓 45 分｜標準計程車塞不下 5 人＋行李",m:"Grande Centre Point Prestige Bangkok",from:"BKK 機場",to:"Prestige 飯店",dur:"約45~60分",tags:["廂型車 ฿900~1,500/車"]},
-      {t:"14:45~16:00",a:"🏨 入住＋充分休息補血",n:"剛飛完先躺平補血｜卸行李、沖澡，養精神迎接晚上泰拳"},
-      {t:"16:00~17:15",a:"🍽 Savoey 早晚餐",meal:"夜",shop:"Savoey @ The Mercury Ville Chidlom",type:"泰式海鮮",station:"Chit Lom",oneliner:"50 年老字號泰式海鮮，活海鮮現點，長輩友善",hours:"10:00~22:00",price:"~฿400~600/人",n:"提前到 16:00 先吃飽，避免泰拳前後找食｜The Mercury Ville 2F｜建議線上訂位 086-341-8472",m:"Savoey The Mercury Ville Chidlom Bangkok",nospicy:"鳳梨炒飯、清蒸魚（可要求不辣）、蝦類、蛋炒類、海鮮湯（指定 no chili）",alts:[
+      {t:"14:45~16:00",a:"🏨 入住＋充分休息補血",n:"剛飛完先躺平補血｜卸行李、沖澡，養精神迎接晚上唐人街夜遊"},
+      {t:"16:00~17:15",a:"🍽 Savoey 早晚餐",meal:"夜",shop:"Savoey @ The Mercury Ville Chidlom",type:"泰式海鮮",station:"Chit Lom",oneliner:"50 年老字號泰式海鮮，活海鮮現點，長輩友善",hours:"10:00~22:00",price:"~฿400~600/人",n:"提前到 16:00 先吃飽｜The Mercury Ville 2F｜建議線上訂位 086-341-8472",m:"Savoey The Mercury Ville Chidlom Bangkok",nospicy:"鳳梨炒飯、清蒸魚（可要求不辣）、蝦類、蛋炒類、海鮮湯（指定 no chili）",alts:[
         {name:"Nara Thai（CentralWorld 7F）",type:"正統泰菜",station:"Chit Lom",oneliner:"Michelin Guide 收錄，免預約備案",hours:"10:00~22:00",price:"~฿400~700/人",warn:"Savoey 客滿時 Plan B",map:"Nara Thai Cuisine CentralWorld Bangkok"}
       ]},
-      {t:"17:30~18:15",a:"🚕 Grab 前往老城 Rajadamnern",n:"飯店無捷運直達老城，Grab 最順｜週六傍晚保守抓 35 分",m:"Rajadamnern Stadium Bangkok",from:"Prestige",to:"Rajadamnern Stadium",dur:"約30~40分",tags:["Grab ฿150~250/車"]},
-      {t:"18:15~19:00",a:"🎫 到場取票入座",n:"QR 票出示手機即可｜先到避免主賽前人潮",m:"Rajadamnern Stadium Bangkok"},
-      {t:"19:00~21:30",a:"🥊 RWS 旗艦泰拳",hours:"週六 19:00 開打",n:"⭐ 泰國國技、Rajadamnern World Series 旗艦場｜門票 Ringside ฿2,500／Club ฿1,900／3rd Class｜看到主賽後段可先走避人潮",m:"Rajadamnern Stadium Bangkok"},
-      {t:"21:30~22:15",a:"🚕 Grab 回飯店早睡",n:"散場 Grab 回 Chit Lom｜抵達日早睡養精神迎接 Day2",from:"Rajadamnern Stadium",to:"Prestige",dur:"約30~40分",tags:["Grab ฿150~250/車"]}
+      {t:"17:15~19:45",a:"🏨 回飯店休息｜抵達日養精神",n:"剛飛完第一天不硬拚｜回房沖澡放鬆，等唐人街入夜氛圍最旺（18:30 後）再出門"},
+      {t:"19:45~20:15",a:"🚕 Grab 前往唐人街 Yaowarat",n:"飯店無捷運直達、混齡長輩別走 MRT 轉線｜Grab 直達指定 T&K Seafood／Wat Mangkon 路口（主街中段）",m:"T&K Seafood Yaowarat Bangkok",from:"Prestige",to:"Yaowarat 唐人街",dur:"約20~35分",tags:["Grab ฿120~200/車（6 座）"]},
+      {t:"20:15~21:15",a:"🌃 耀華力 Yaowarat 唐人街夜遊",hours:"入夜後最熱鬧、營業至深夜",n:"入夜霓虹金招牌＋百年金鋪/廟宇/老藥行，全球知名露天美食大街｜已在 Savoey 吃飽，這裡當夜景散步＋坐下吃一輪甜品/宵夜，只逛單向主街一小段（約 500m）｜不吃辣好點：炭烤海鮮、蒜蓉料理、粥/河粉、燕窩、蛋塔、椰奶甜湯｜⚠️ 露天雨季備傘、攤多收現金、人潮多顧好財物、長輩找店家坐著歇｜小吃約 ฿50~150/份",m:"Yaowarat Road Bangkok Chinatown"},
+      {t:"21:15~22:00",a:"🚕 Grab 回飯店早睡",n:"在主街同區叫車回 Chit Lom｜抵達日早睡養精神迎接 Day2",from:"Yaowarat 唐人街",to:"Prestige",dur:"約20~35分",tags:["Grab ฿120~200/車（6 座）"]}
     ],
     budget:[
       ["機場廂型車 ×1 台","~฿900~1,500"],
       ["Savoey 早晚餐 ×5","~฿2,000~3,000"],
-      ["⭐ RWS 泰拳門票 ×5","~฿9,500~12,500"],
-      ["老城 Grab 來回","~฿300~500"],
-      ["合計","~฿12,700~17,500"]
+      ["唐人街小吃/甜品 ×5","~฿500~1,000"],
+      ["唐人街 Grab 來回","~฿250~400"],
+      ["合計","~฿3,650~5,900"]
     ]
   },
   {
@@ -357,7 +357,7 @@ const DAYS = [
   {
     day:3, date:"07/20（一）", title:"換飯店＋頂級 SPA 療癒日",
     hotel:"Kimpton Maa-Lai Bangkok",
-    warns:["住宿轉換日｜Prestige 退房 12:00 → Kimpton 入住 15:00","⭐ Divana Scentuara 需提前 7 天線上訂位（5 人同時段、享早鳥折扣）","同在 Central Embassy：Eathai 在 LG 層、Somboon 在 5F，別走錯樓層"],
+    warns:["住宿轉換日｜Prestige 退房 12:00 → Kimpton 入住 15:00","⭐ Divana Scentuara 需提前 7 天線上訂位（5 人同時段、享早鳥折扣）","⭐ Copper Beyond Buffet 晚餐需提前訂位（LINE @copperbeyondbuffet／Hungry Hub／Klook）｜天天爆滿、限時 2hr、遲到不補時｜Gaysorn Amarin 3F、BTS Chit Lom 空橋直達"],
     items:[
       {t:"09:30~11:00",a:"🏨 Prestige 退房準備＋寄放行李",n:"退房 12:00｜先整理行李，可請禮賓協助叫車"},
       {t:"11:00~11:20",a:"🚕 Grab 換飯店到 Kimpton",n:"直線僅約 630m 但拖行李別走路｜5 人+行李建議 GrabCar XL／6 人座",m:"Kimpton Maa-Lai Bangkok",from:"Prestige",to:"Kimpton（Soi Tonson）",dur:"約8~15分",tags:["฿100~200/車"]},
@@ -365,17 +365,19 @@ const DAYS = [
       {t:"12:00~13:30",a:"🍽 Eathai 午餐",meal:"昼",shop:"Eathai",type:"美食廣場",station:"Central Embassy LG",oneliner:"高質感泰式美食廣場，冷氣舒適新手友善",hours:"10:00~22:00",price:"~฿300/人（+5% 服務費）",n:"Central Embassy LG 層｜距 Kimpton 步行 12 分或短 Grab",m:"Eathai Central Embassy Bangkok",nospicy:"海南雞飯、清湯河粉/粥（指定不辣）、Pad Thai 炒河粉、泰式甜點水果"},
       {t:"13:30~15:00",a:"🛍 Central Embassy 輕逛／入住",n:"非購物重心，輕鬆逛即可｜時間到回 Kimpton 入住放行李",m:"Central Embassy Bangkok"},
       {t:"15:30~17:45",a:"🛀 Divana Scentuara 2hr 頂級 SPA",hours:"11:00~23:00",n:"⭐ 全程唯一頂級 SPA｜90 年古宅園林、120 分芳療套組 ~฿2,600/人｜Soi Somkid（緊鄰 Central Embassy）｜⚠️ 需提前 7 天線上訂",m:"Divana Scentuara Spa Bangkok"},
-      {t:"18:00~19:30",a:"🦀 Somboon Seafood 咖哩蟹晚餐",meal:"夜",shop:"Somboon Seafood",type:"海鮮餐廳",station:"Central Embassy 5F",oneliner:"曼谷咖哩蟹名店，招牌咖哩蟹不辣（咖哩粉炒蛋香）",hours:"11:00~22:00",price:"~฿800/人",n:"Central Embassy 5F｜建議先訂位（tel 02-160-5965）｜清蒸魚需指定不加 lime-chilli 醬",m:"Somboon Seafood Central Embassy Bangkok",nospicy:"咖哩蟹（招牌不辣）、蒜蓉蝦、蛋炒飯、蠔煎、炒青菜（Tom Yum 等湯品才辣）",alts:[
+      {t:"17:45~19:15",a:"🏨 回 Kimpton 休息＋換裝",n:"SPA 後回房放鬆、換上 smart casual（Copper 有服儀規範，勿短褲拖鞋）｜19:15 從 Kimpton 走空橋往 Gaysorn Amarin 約 5~7 分"},
+      {t:"19:30~21:30",a:"🦞 Copper Beyond Buffet 晚餐（現點現做無限吃）",meal:"夜",shop:"Copper Beyond Buffet",type:"國際百匯 buffet",station:"Gaysorn Amarin 3F｜BTS Chit Lom 空橋直達",oneliner:"送餐到桌的高級 buffet，海鮮/龍蝦/A5 和牛/壽司/鵝肝，米其林級技法平價化（150+ 道）",hours:"晚餐場 17:00~19:00 / 19:30~21:30（每場限時 2hr）",price:"~฿2,399/人（晚餐場 net；平日午餐場約 ฿1,999）",n:"⭐ 務必先訂位（LINE @copperbeyondbuffet／Hungry Hub／Klook，可提前約 15 天）天天爆滿｜限時 2hr、遲到不補時、提早 10 分憑 QR 報到｜長輩友善：送餐到桌不用走動、全程冷氣、空橋直達",m:"Copper Beyond Buffet Gaysorn Amarin Bangkok",nospicy:"本質非辣：龍蝦/生蠔/A5 和牛/壽司生魚片/鵝肝/黑松露湯/西式甜點皆非辣，泰式菜可請廚房不辣（mai phet）",alts:[
+        {name:"Somboon Seafood（Central Embassy 5F）",type:"海鮮餐廳",station:"Central Embassy 5F",oneliner:"曼谷咖哩蟹名店，招牌咖哩蟹不辣；想吃單點海鮮改這家",hours:"11:00~22:00",price:"~฿800/人",warn:"原定案｜tel 02-160-5965 需訂位",map:"Somboon Seafood Central Embassy Bangkok"},
         {name:"Laem Charoen Seafood（CentralWorld 3F）",type:"海鮮餐廳",station:"CentralWorld",oneliner:"羅勇海鮮老店，招牌炸鱸魚配香魚露不辣",hours:"10:00~22:00",price:"~฿700~900/人",warn:"想換口味的同級替代",map:"Laem Charoen Seafood CentralWorld Bangkok"}
       ]},
-      {t:"19:45~",a:"🍸 回 Kimpton 頂樓輕鬆收尾",n:"換飯店+SPA+海鮮大餐後養精神｜Kimpton 頂樓 rooftop 酒吧／泳池放鬆，為 Day4 文化日蓄力",from:"Central Embassy",to:"Kimpton",dur:"約8~15分"}
+      {t:"21:30~",a:"🍸 回 Kimpton 頂樓輕鬆收尾",n:"換飯店+SPA+Copper 大餐後養精神｜Kimpton 頂樓 rooftop 酒吧／泳池放鬆，為 Day4 文化日蓄力",from:"Gaysorn Amarin",to:"Kimpton",dur:"步行約5分"}
     ],
     budget:[
       ["Grab 換飯店＋區內交通","~฿400"],
       ["Eathai 午餐 ×5","~฿1,500"],
       ["⭐ 頂級 SPA Divana 2hr ×5","~฿13,000"],
-      ["Somboon 晚餐 ×5","~฿4,000"],
-      ["合計","~฿18,900"]
+      ["⭐ Copper Beyond Buffet 晚餐 ×5","~฿12,000"],
+      ["合計","~฿26,900"]
     ]
   },
   {
@@ -415,9 +417,7 @@ const DAYS = [
       {t:"13:30~15:30",a:"💆 Luna 美甲＋按摩",hours:"10:00~23:00",n:"⭐ Sukhumvit Soi 18（BTS Asok 旁、Chit Lom 3 站）｜美甲+按摩+美睫、韓系高質感｜建議先預約 02-000-1872",m:"Luna Nail and Massage Sukhumvit 18 Bangkok"},
       {t:"16:00~17:00",a:"🚃 BTS 回 Chit Lom 稍歇",n:"Asok→Chit Lom BTS 3 站約 15 分｜回飯店放鬆再上高空",from:"Asok",to:"Chit Lom",dur:"BTS 約15分"},
       {t:"17:30~19:30",a:"🌃 Red Sky Bar 高空日落夜景",meal:"小吃",shop:"Red Sky Bar",type:"屋頂酒吧",station:"CentralWorld",oneliner:"Centara Grand 55-56F 環形 360° 高空酒吧，看得到 Mahanakhon 大樓",hours:"Bar 16:00~01:00",price:"~฿450~600/人",n:"日落約 18:40｜18:00 前卡位賞日落+夜景｜⚠️ smart casual、未滿 20 歲禁入｜56F walk-in 不可訂位",m:"Red Sky Bar Centara Grand CentralWorld Bangkok"},
-      {t:"20:00~21:30",a:"🍽 Baannok BKK 米其林級收尾晚餐",meal:"夜",shop:"Baannok BKK",type:"米其林指南 Korat 菜",station:"Lang Suan",oneliner:"米其林指南收錄的呵叻(Korat)家鄉菜，最後一晚精緻收尾",hours:"11:00~22:00",price:"~฿500~800/人",n:"VIVRE Building 2F, Lang Suan｜飯店步行 5~7 分｜⚠️ 需提前訂位(063-934-1416)、聲明不辣",m:"Baannok BKK Lang Suan Bangkok",nospicy:"烤腸沙拉(Korat Sausage)、Pad Mhee Korat 炒麵(可做不辣)、焦糖香蕉椰奶甜點｜避開招牌辣湯 Kaeng Liang",alts:[
-        {name:"唐人街 Yaowarat（想要夜市氛圍）",type:"街區夜市",station:"Wat Mangkon",oneliner:"想換成庶民夜市可改去唐人街（跨城較遠）",hours:"入夜後最熱鬧",price:"~฿300~600/人",warn:"跨城備案｜T&K 海鮮等不辣攤",map:"Yaowarat Road Bangkok Chinatown"}
-      ]},
+      {t:"20:00~21:30",a:"🍽 Baannok BKK 米其林級收尾晚餐",meal:"夜",shop:"Baannok BKK",type:"米其林指南 Korat 菜",station:"Lang Suan",oneliner:"米其林指南收錄的呵叻(Korat)家鄉菜，最後一晚精緻收尾",hours:"11:00~22:00",price:"~฿500~800/人",n:"VIVRE Building 2F, Lang Suan｜飯店步行 5~7 分｜⚠️ 需提前訂位(063-934-1416)、聲明不辣",m:"Baannok BKK Lang Suan Bangkok",nospicy:"烤腸沙拉(Korat Sausage)、Pad Mhee Korat 炒麵(可做不辣)、焦糖香蕉椰奶甜點｜避開招牌辣湯 Kaeng Liang"},
       {t:"21:30~",a:"🚶 步行回 Kimpton",n:"最後一晚家門口畫句點、早睡｜隔天 Day6 上午出發趕 12:00 CI832",from:"Baannok",to:"Kimpton",dur:"步行約5~7分"}
     ],
     budget:[
@@ -449,10 +449,10 @@ const DAYS = [
 
 /* Map places with verified coordinates */
 const PLACES = [
-  // Day 1 - 抵達 + 週六 RWS 泰拳
+  // Day 1 - 抵達 + 唐人街夜遊
   {day:1,name:"Prestige Hotel",cat:"hotel",lat:13.7413,lng:100.5390,info:"飯店｜BTS Ratchadamri",mq:"Grande Centre Point Prestige Bangkok",pid:"ChIJx7ykQRKf4jARpVE9896GPuo"},
   {day:1,name:"Savoey 泰式海鮮",cat:"food",lat:13.7440,lng:100.5437,info:"早晚餐｜Mercury Ville 2F｜~฿400-600",mq:"Savoey The Mercury Ville Chidlom Bangkok",pid:""},
-  {day:1,name:"Rajadamnern 泰拳",cat:"spot",lat:13.7575,lng:100.5063,info:"RWS 旗艦｜週六 19:00｜門票 ฿1,900起",mq:"Rajadamnern Stadium Bangkok",pid:""},
+  {day:1,name:"耀華力 唐人街",cat:"spot",lat:13.7409,lng:100.5087,info:"入夜霓虹夜遊｜Yaowarat｜逛街免費",mq:"Yaowarat Road Bangkok Chinatown",pid:"ChIJrdfOcJOZ4jAR1Grh5w74V1g"},
   // Day 2 - Chatuchak / Ratchada（單向南下）
   {day:2,name:"洽圖洽市集",cat:"spot",lat:13.7999,lng:100.5509,info:"週末 09:00-18:00｜逾15,000攤",mq:"Chatuchak Weekend Market Bangkok",pid:"ChIJ3fiD6BSc4jARS324hNeR8ZE"},
   {day:2,name:"JJ Mall（避暑）",cat:"spot",lat:13.8035,lng:100.5505,info:"冷氣商場｜洽圖洽中途避暑",mq:"JJ Mall Chatuchak Bangkok",pid:""},
@@ -464,7 +464,7 @@ const PLACES = [
   {day:3,name:"Eathai",cat:"food",lat:13.7440,lng:100.5470,info:"Central Embassy LG｜~฿300/人",mq:"Eathai Central Embassy Bangkok",pid:"ChIJ17TfAdme4jARiI8BOLODlOE"},
   {day:3,name:"Central Embassy",cat:"spot",lat:13.7445,lng:100.5468,info:"商場｜10:00-22:00",mq:"Central Embassy Bangkok",pid:"ChIJz_aVZ9ue4jAR9mXCLXqZstw"},
   {day:3,name:"Divana Scentuara SPA",cat:"spa",lat:13.7430,lng:100.5460,info:"頂級 SPA 2hr｜~฿2,600｜需預約",mq:"Divana Scentuara Spa Bangkok",pid:""},
-  {day:3,name:"Somboon Seafood",cat:"food",lat:13.7442,lng:100.5465,info:"咖哩蟹名店 5F｜~฿800/人",mq:"Somboon Seafood Central Embassy Bangkok",pid:"ChIJebESl9ye4jARCgEOf0ddpLc"},
+  {day:3,name:"Copper Beyond Buffet",cat:"food",lat:13.7437,lng:100.5413,info:"高級 buffet｜Gaysorn Amarin 3F｜晚餐 ~฿2,399/人",mq:"Copper Beyond Buffet Gaysorn Amarin Bangkok",pid:"ChIJO8MKjW2f4jARj37d2JR3l8c"},
   // Day 4 - 老城三寺 / 河岸
   {day:4,name:"大皇宮＋玉佛寺",cat:"spot",lat:13.7500,lng:100.4914,info:"門票 ฿500｜08:30-15:30售票",mq:"The Grand Palace Bangkok",pid:"ChIJPzZsMU6Z4jARQUzvk913bCo"},
   {day:4,name:"臥佛寺",cat:"spot",lat:13.7465,lng:100.4930,info:"門票 ฿300｜46m 臥佛",mq:"Wat Pho Bangkok",pid:"ChIJgcxFcQWZ4jARLsIR9Qia9H0"},
@@ -542,6 +542,7 @@ const MICH_AWARD_LABELS={'1 Star':'⭐ 一星','Bib Gourmand':'🍽 必比登','
 /* ── Nearby（附近吃逛）── */
 const NB_CATS={
   food:  {emoji:'🍽️', label:'吃飯', color:'#ff9500'},
+  weed:  {emoji:'🌿', label:'大麻', color:'#2e9e5b'},
   shop:  {emoji:'🛒', label:'逛街', color:'#34c759'},
   spot:  {emoji:'📷', label:'景點', color:'#5ac8fa'},
   other: {emoji:'✨', label:'其他', color:'#c89b3c'},
@@ -583,6 +584,22 @@ const NB_PLACES=[
   {name:'Ning’s Mango Stand',cat:'food',lat:13.7236213,lng:100.578837,area:'Thong Lo',note:'芒果糯米飯攤 4.7★｜13:00-22:00｜BTS Thong Lo 站旁 與 Mae Varee 相鄰可比較',pid:'ChIJdQzg3aif4jARhevFwfWijpE'},
   {name:'Mae Varee 芒果糯米飯',cat:'food',lat:13.7240179,lng:100.5793321,area:'Thong Lo',note:'芒果糯米飯老店 4.3★｜06:00-22:00｜BTS Thong Lo 站旁 แม่วารี',pid:'ChIJbbqO2Kif4jARIZxlpOCwAi4'},
   {name:'Wanjai Cafe House @SongWat',cat:'food',lat:13.7381305,lng:100.5066394,area:'Song Wat',note:'河岸老屋咖啡館 4.7★｜10:00-19:00（五六日延後收）｜Song Wat 路',pid:'ChIJc6U4fgCZ4jARy46zpKKFb3c'},
+  {name:'K. Panich 芒果糯米飯',cat:'food',lat:13.7521,lng:100.4984,area:'Phra Nakhon',note:'芒果糯米飯名店 4.4★｜07:00-17:00（週日休）｜Sao Chingcha 巨鞦韆旁',pid:'ChIJWZU0mRGZ4jARFdWbuetBFRo'},
+  // 🌿 大麻 lounge（皆確認有店內使用；需 PT33 處方、20+ 帶護照）
+  {name:'Sawadee Sativa',cat:'weed',lat:13.74906,lng:100.54110,area:'Ratchadamri',note:'大麻 lounge 4.9★｜CentralWorld 對面、離飯店最近｜可店內使用',pid:'ChIJ-SnM4Gyf4jARS3aD3jwGfg4'},
+  {name:'golden hour bkk',cat:'weed',lat:13.73929,lng:100.56559,area:'Asok',note:'大麻 lounge 5.0★｜精品風＋brunch/甜點｜09:00-01:00',pid:'ChIJt2-Mzm-f4jARTxupDLHGefY'},
+  {name:'MedMen Bangkok',cat:'weed',lat:13.74454,lng:100.55667,area:'Sukhumvit 11',note:'大麻 lounge 5.0★｜陽台吸菸區＋PS5｜11:00-03:00',pid:'ChIJ15FDocOf4jARLWO43y0X1HU'},
+  {name:'Four Twenty – High Garden',cat:'weed',lat:13.74044,lng:100.56231,area:'Asok',note:'大麻 lounge 4.9★｜頂樓露天＋live music｜10:00-01:00',pid:'ChIJgeWs5TKf4jARrXcca2v5IEE'},
+  {name:'Dr Green',cat:'weed',lat:13.73762,lng:100.56133,area:'Asok',note:'大麻 lounge 4.9★｜醫療取向｜24 小時',pid:'ChIJe8G0vaqf4jAR-myaYTPJqgI'},
+  {name:'High Society Cannabis Club',cat:'weed',lat:13.73793,lng:100.56665,area:'Sukhumvit 31',note:'大麻 lounge 5.0★｜隱藏入口 club 感｜09:00-02:00',pid:'ChIJrbbQfnef4jARLMfJ4H_cYNg'},
+  {name:'High Thai Weed',cat:'weed',lat:13.73500,lng:100.56763,area:'Sukhumvit 33',note:'大麻 lounge 4.8★｜3F lounge＋6F 頂樓看天際線',pid:'ChIJ5y9tBwSf4jARnVR7HrkhNkw'},
+  {name:'Siam Green – Phrom Phong',cat:'weed',lat:13.73031,lng:100.57014,area:'Phrom Phong',note:'大麻 lounge 5.0★｜EmQuartier 旁、口碑最厚｜11:00-03:00',pid:'ChIJAaedVE2f4jARMXwbt1pByig'},
+  {name:'LV Cannabis Boutique',cat:'weed',lat:13.73206,lng:100.56501,area:'Sukhumvit 22',note:'大麻 lounge 5.0★｜精品私人包廂',pid:'ChIJZ1zgA1mf4jARciXJhXjn3LY'},
+  {name:"California's Finest",cat:'weed',lat:13.72540,lng:100.56757,area:'Sukhumvit 24',note:'大麻 lounge 5.0★｜三層 lounge＋patio｜24 小時',pid:'ChIJESXxGVef4jARYB_IlgP9SmQ'},
+  {name:'Cannabis Twins',cat:'weed',lat:13.72635,lng:100.53734,area:'Silom',note:'大麻 lounge 5.0★｜3 間 smoke room｜10:00-01:00',pid:'ChIJEcVgHsif4jARvyo1f1YxDmo'},
+  {name:'Cannabis Kingdom',cat:'weed',lat:13.72537,lng:100.53415,area:'Silom',note:'大麻 lounge 4.9★｜戶外花園＋咖啡｜09:00-23:00',pid:'ChIJySYtu3qf4jAR9nWSWNAjyRs'},
+  {name:'Fat Buds',cat:'weed',lat:13.71886,lng:100.58861,area:'Ekkamai',note:'大麻 lounge 5.0★｜高 CP＋免費 bong',pid:'ChIJF6ZCxj2f4jARry9ErcaIPco'},
+  {name:'Stash BKK',cat:'weed',lat:13.70620,lng:100.59900,area:'On Nut',note:'大麻 lounge 5.0★｜陽台吸菸區｜24 小時（較遠）',pid:'ChIJ_fMPbcmf4jARRasyUH1sFIs'},
 ];
 // 地標錨點（只在地圖當參考，不進清單、不參與 500m 判定）
 const NB_LANDMARKS=[
