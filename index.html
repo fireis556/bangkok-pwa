@@ -543,6 +543,7 @@ const MICH_AWARD_LABELS={'1 Star':'⭐ 一星','Bib Gourmand':'🍽 必比登','
 const NB_CATS={
   food:  {emoji:'🍽️', label:'吃飯', color:'#ff9500'},
   weed:  {emoji:'🌿', label:'大麻', color:'#2e9e5b'},
+  spa:   {emoji:'💆', label:'按摩', color:'#ff6482'},
   shop:  {emoji:'🛒', label:'逛街', color:'#34c759'},
   spot:  {emoji:'📷', label:'景點', color:'#5ac8fa'},
   other: {emoji:'✨', label:'其他', color:'#c89b3c'},
@@ -593,6 +594,7 @@ const NB_PLACES=[
   {name:'Pork Satay Nai Song',cat:'food',lat:13.74282,lng:100.52303,area:'Banthat Thong',note:'豬肉沙嗲 4.5★（800+ 則）｜Banthat Thong Rd',pid:'ChIJg85ZGCqZ4jARu2GN35jdPAI'},
   {name:'Elvis Suki',cat:'food',lat:13.74253,lng:100.52271,area:'Banthat Thong',note:'泰式壽喜燒 suki 4.1★（900+ 則）｜Banthat Thong Rd',pid:'ChIJRTmdbaWZ4jARKd0jlRcjRbY'},
   {name:'Pungdet 爆漿餐包',cat:'food',lat:13.74165,lng:100.52265,area:'Banthat Thong',note:'爆漿餐包/烤吐司 4.3★｜Banthat Thong Rd',pid:'ChIJ0WG5_vuZ4jARC5GKW9TRGfo'},
+  {name:'Here Hai 螃蟹炒蛋',cat:'food',lat:13.73027,lng:100.58634,area:'Ekkamai',note:'螃蟹炒蛋名店 4.4★（3,800+ 則）｜Ekkamai',pid:'ChIJTUsNVjOf4jARkGF5xIeIJCY'},
   // 🌿 大麻 lounge（皆確認有店內使用；需 PT33 處方、20+ 帶護照）
   {name:'Sawadee Sativa',cat:'weed',lat:13.74906,lng:100.54110,area:'Ratchadamri',note:'大麻 lounge 4.9★｜CentralWorld 對面、離飯店最近｜可店內使用',pid:'ChIJ-SnM4Gyf4jARS3aD3jwGfg4'},
   {name:'golden hour bkk',cat:'weed',lat:13.73929,lng:100.56559,area:'Asok',note:'大麻 lounge 5.0★｜精品風＋brunch/甜點｜09:00-01:00',pid:'ChIJt2-Mzm-f4jARTxupDLHGefY'},
@@ -608,6 +610,12 @@ const NB_PLACES=[
   {name:'Cannabis Kingdom',cat:'weed',lat:13.72537,lng:100.53415,area:'Silom',note:'大麻 lounge 4.9★｜戶外花園＋咖啡｜09:00-23:00',pid:'ChIJySYtu3qf4jAR9nWSWNAjyRs'},
   {name:'Fat Buds',cat:'weed',lat:13.71886,lng:100.58861,area:'Ekkamai',note:'大麻 lounge 5.0★｜高 CP＋免費 bong',pid:'ChIJF6ZCxj2f4jARry9ErcaIPco'},
   {name:'Stash BKK',cat:'weed',lat:13.70620,lng:100.59900,area:'On Nut',note:'大麻 lounge 5.0★｜陽台吸菸區｜24 小時（較遠）',pid:'ChIJ_fMPbcmf4jARRasyUH1sFIs'},
+  // 💆 按摩 / SPA
+  {name:'MYTH Urban Retreat',cat:'spa',lat:13.73451,lng:100.54802,area:'Ploenchit',note:'按摩 SPA 4.8★（3,400+ 則）｜Soi Ruamrudee、離飯店近',pid:'ChIJm3MF896e4jAR6c-neqDrays'},
+  {name:'BHAWA Spa on the eight',cat:'spa',lat:13.73663,lng:100.55570,area:'Nana',note:'高質感 SPA 4.6★（1,000+ 則）｜Sukhumvit 8',pid:'ChIJr33MEgmf4jAR3hXmfv16_z8'},
+  {name:'Medical School of Massage',cat:'spa',lat:13.74686,lng:100.49406,area:'Phra Nakhon',note:'古法醫療按摩 4.9★（800+ 則）｜Sanam Chai、近臥佛寺',pid:'ChIJycuCtgiZ4jARmjRc46ADRzQ'},
+  {name:'Samatha Thai Massage',cat:'spa',lat:13.73831,lng:100.51774,area:'Pathum Wan',note:'泰式按摩 4.6★（700+ 則）｜สมถะ｜Rong Muang',pid:'ChIJdSMj_FOZ4jARc7DpDqDfCd0'},
+  {name:'VAYA Spa & Cafe',cat:'spa',lat:13.73649,lng:100.57335,area:'Phrom Phong',note:'SPA＋咖啡 4.9★（評論較少 57 則）｜Soi Phrom Si',pid:'ChIJHf_NwLOf4jARrtUTPvNUFZI'},
 ];
 // 地標錨點（只在地圖當參考，不進清單、不參與 500m 判定）
 const NB_LANDMARKS=[
