@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bangkok-v48';
+const CACHE_NAME = 'bangkok-v49';
 const ASSETS = [
   './',
   './index.html',
